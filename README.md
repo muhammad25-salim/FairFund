@@ -1,4 +1,4 @@
-Welcome dear mmr.Kosrat
+Welcome dear mr.Kosrat
 this is our project "FairFund" - Expense Sharing & Management System
 we hope that you will find it something great, and we will do our best to complete it in best way possible.
 
