@@ -14,6 +14,11 @@ import javafx.scene.image.ImageView;
 
 public class MainPage extends Application {
     private Stage primaryStage;
+    private FarFundManager farFundManager; 
+
+    public MainPage(FarFundManager farFundManager) {
+        this.farFundManager = farFundManager;
+    }
 
     @Override
     public void start(Stage primaryStage) {
