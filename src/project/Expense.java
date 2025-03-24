@@ -1,0 +1,55 @@
+package project;
+
+import java.util.List;
+
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+
+public class Expense {
+    private SimpleStringProperty title; // JavaFX property for title
+    private SimpleDoubleProperty totalAmount; // JavaFX property for total amount
+    private User payer; // Payer (no need for property here)
+    private List<User> participants; // Participants (no need for property here)
+
+    public Expense(String title, double totalAmount, User payer, List<User> participants) {
+        this.title = new SimpleStringProperty(title);
+        this.totalAmount = new SimpleDoubleProperty(totalAmount);
+        this.payer = payer;
+        this.participants = participants;
+        calculateBalances();
+    }
+
+    // Property getters
+    public SimpleStringProperty titleProperty() {
+        return title;
+    }
+
+    public SimpleDoubleProperty totalAmountProperty() {
+        return totalAmount;
+    }
+
+    public User getPayer() {
+        return payer;
+    }
+
+    public List<User> getParticipants() {
+        return participants;
+    }
+
+    // Regular getters and setters
+    public String getTitle() {
+        return title.get();
+    }
+
+    public void setTitle(String title) {
+        this.title.set(title);
+    }
+
+    public double getTotalAmount() {
+        return totalAmount.get();
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount.set(totalAmount);
+    }
+}
