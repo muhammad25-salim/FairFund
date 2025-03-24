@@ -27,8 +27,4 @@ class Group {
     public List<User> getUsers() { return users; }
     public List<Expense> getExpenses() { return expenses; }
     
-    @Override
-    public String toString() {
-        return "Group: " + groupName + " (ID: " + groupId + ")";
-    }
 }

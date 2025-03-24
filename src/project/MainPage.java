@@ -1,7 +1,5 @@
 package project;
 
-import org.w3c.dom.Text;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -48,12 +46,7 @@ public class MainPage extends Application {
         rightSide.setAlignment(Pos.CENTER);
         rightSide.setPadding(new Insets(50));
 
-<<<<<<< HEAD
-        Text title = new Text("FAIR FUND");
-=======
-
          Text title = new Text("FAIR FUND");
->>>>>>> Muhamad_Qadr
         title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         title.setFill(javafx.scene.paint.Color.BLACK);
 
@@ -61,7 +54,6 @@ public class MainPage extends Application {
         subTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
 
         Button createGroupBtn = new Button("Create group");
-<<<<<<< HEAD
         createGroupBtn.setStyle(
                 "-fx-background-color: #238BFA; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
         createGroupBtn.setOnAction(e -> openCreateGroup());
@@ -69,21 +61,12 @@ public class MainPage extends Application {
         Button joinGroupBtn = new Button("Join an existing group");
         joinGroupBtn.setStyle(
                 "-fx-background-color: transparent; -fx-border-color: #238BFA; -fx-text-fill: #238BFA; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-=======
         createGroupBtn.setStyle("-fx-background-color: #238BFA; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
         createGroupBtn.setOnAction(e -> openCreateGroup());
 
-        Button joinGroupBtn = new Button("Join an existing group");
-        joinGroupBtn.setStyle("-fx-background-color: transparent; -fx-border-color: #238BFA; -fx-text-fill: #238BFA; -fx-font-size: 16px; -fx-padding: 10px 20px;");
->>>>>>> Muhamad_Qadr
-        joinGroupBtn.setOnAction(e -> openJoinGroup());
-
         rightSide.getChildren().addAll(title, subTitle, createGroupBtn, joinGroupBtn);
 
-<<<<<<< HEAD
-=======
        
->>>>>>> Muhamad_Qadr
         root.setLeft(leftSide);
         root.setCenter(rightSide);
 
@@ -104,10 +87,7 @@ public class MainPage extends Application {
     public static void launchGUI(FarFundManager farFundManager) {
         MainPage mainPage = new MainPage(farFundManager);
         mainPage.start(new Stage());
-<<<<<<< HEAD
 
     }
 }
-=======
-    }}
->>>>>>> Muhamad_Qadr
+    

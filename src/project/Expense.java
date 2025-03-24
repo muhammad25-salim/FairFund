@@ -6,17 +6,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Expense {
-<<<<<<< HEAD
+
     private SimpleStringProperty title; 
     private SimpleDoubleProperty totalAmount; 
     private User payer; 
-    private List<User> participants;
-=======
-    private SimpleStringProperty title; // JavaFX property for title
-    private SimpleDoubleProperty totalAmount; // JavaFX property for total amount
-    private User payer; // Payer (no need for property here)
-    private List<User> participants; // Participants (no need for property here)
->>>>>>> Muhamad_Qadr
+    private List<User> participants; 
 
     public Expense(String title, double totalAmount, User payer, List<User> participants) {
         this.title = new SimpleStringProperty(title);
@@ -26,11 +20,7 @@ public class Expense {
         calculateBalances();
     }
 
-<<<<<<< HEAD
    
-=======
-    // Property getters
->>>>>>> Muhamad_Qadr
     public SimpleStringProperty titleProperty() {
         return title;
     }
@@ -47,11 +37,7 @@ public class Expense {
         return participants;
     }
 
-<<<<<<< HEAD
    
-=======
-    // Regular getters and setters
->>>>>>> Muhamad_Qadr
     public String getTitle() {
         return title.get();
     }
@@ -79,12 +65,5 @@ public class Expense {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Expense: " + title.get() + " (Total: " + totalAmount.get() + ", Payer: " + payer.getName() + ")";
-    }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> Muhamad_Qadr
+

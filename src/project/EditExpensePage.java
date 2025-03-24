@@ -9,24 +9,24 @@ import javafx.stage.Stage;
 
 public class EditExpensePage {
     public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId, Expense expense) {
-        // Back Button (Top-Left)
+        // Back Button 
         Button backBtn = new Button("«");
         backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)));
 
-        // Save Button (Top-Right)
+        // Save Button 
         Button saveBtn = new Button("Save");
         
 
-        // Title Field (Prefilled & Underlined)
+        // Title Field 
         TextField titleField = new TextField(expense.getTitle());
         titleField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
 
-        // Total Field (Prefilled)
+        // Total Field 
         TextField totalField = new TextField(String.valueOf(expense.getTotalAmount()));
         totalField.setMaxWidth(100);
         totalField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
 
-        // Paid By Dropdown (Prefilled)
+        // Paid By Dropdown 
         ComboBox<String> paidByDropdown = new ComboBox<>();
         paidByDropdown.getItems().addAll("Mohammad Salim", "Ahmad Hamad", "Abdull Aziz Shwan", "Mohammad Qadir");
         paidByDropdown.setValue(expense.getPayer().getName());
@@ -51,17 +51,14 @@ public class EditExpensePage {
             expense.setTotalAmount(Double.parseDouble(totalField.getText()));
             expense.getPayer().setName(paidByDropdown.getValue());
 
-            // Clear existing participants and add new ones
-            expense.getParticipants().clear();
+            
             if (user1.isSelected()) expense.getParticipants().add(new User(user1.getText()));
             if (user2.isSelected()) expense.getParticipants().add(new User(user2.getText()));
             if (user3.isSelected()) expense.getParticipants().add(new User(user3.getText()));
             if (user4.isSelected()) expense.getParticipants().add(new User(user4.getText()));
 
-            // Recalculate balances
             expense.calculateBalances();
 
-            // Go back to ExpensesPage
             primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId));
         });
 
@@ -73,11 +70,9 @@ public class EditExpensePage {
         blueBox.setAlignment(Pos.TOP_LEFT);
         blueBox.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
 
-        // Stack Pane for Centering
         StackPane stackPane = new StackPane(blueBox);
         StackPane.setMargin(blueBox, new Insets(50, 50, 50, 50));
 
-        // Layout for buttons (Back and Save)
         HBox buttonsBox = new HBox(10, backBtn, saveBtn);
         buttonsBox.setAlignment(Pos.CENTER_LEFT);
 

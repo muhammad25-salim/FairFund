@@ -39,10 +39,7 @@ public class User {
         this.balance.set(balance);
     }
 
-    @Override
-    public String toString() {
-        return name.get() + " (Balance: " + balance.get() + ")";
-    }
+
 }
 
 

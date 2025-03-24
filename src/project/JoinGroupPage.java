@@ -39,11 +39,11 @@ public class JoinGroupPage {
         joinGroupBtn.setStyle("-fx-background-color: white; -fx-text-fill: #238BFA;");
         joinGroupBtn.setOnAction(e -> {
             String groupId = GidField.getText();
-            Group group = farFundManager.getGroup(groupId); // Fetch group from backend
+            Group group = farFundManager.getGroup(groupId); 
             if (group != null) {
-                primaryStage.setScene(OverviewPage.getScene(primaryStage, farFundManager, groupId)); // Go to OverviewPage
+                primaryStage.setScene(OverviewPage.getScene(primaryStage, farFundManager, groupId)); 
             } else {
-                System.out.println("Group not found!"); // Handle error (e.g., show alert)
+                System.out.println("Group not found!"); 
             }
         });
 
