@@ -52,4 +52,20 @@ public class Expense {
     public void setTotalAmount(double totalAmount) {
         this.totalAmount.set(totalAmount);
     }
+
+    public void calculateBalances() {
+        double splitAmount = totalAmount.get() / participants.size();
+        for (User participant : participants) {
+            if (participant.equals(payer)) {
+                participant.setBalance(participant.getBalance() + (totalAmount.get() - splitAmount));
+            } else {
+                participant.setBalance(participant.getBalance() - splitAmount);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Expense: " + title.get() + " (Total: " + totalAmount.get() + ", Payer: " + payer.getName() + ")";
+    }
 }
