@@ -1,4 +1,4 @@
-package project;
+package project.models;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,16 +32,16 @@ public class FarFundManager {
         Group group = groups.get(groupId);
         if (group != null) {
             group.getExpenses().remove(expense);
-
-            for (User user : group.getUsers()) {
-                user.setBalance(0.0);
-            }
-
-            for (Expense e : group.getExpenses()) {
-                e.calculateBalances();
-            }
+            group.recalculateBalances();
         } else {
             System.out.println("Group not found!");
+        }
+    }
+
+    public void updateExpenseInGroup(String groupId, Expense oldExpense, Expense newExpense) {
+        Group group = groups.get(groupId);
+        if (group != null) {
+            group.updateExpense(oldExpense, newExpense);
         }
     }
 
