@@ -49,6 +49,11 @@ public class User {
         return name.equals(user.name);
     }
 
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
 
 }
 
