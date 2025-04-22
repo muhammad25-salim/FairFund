@@ -105,18 +105,42 @@ public class ExpensesPage {
         table.getColumns().addAll(descriptionColumn, amountColumn, payerColumn, deleteColumn);
         table.setItems(FXCollections.observableArrayList(farFundManager.getGroup(groupId).getExpenses()));
 
+        // Apply striped row styling
+        table.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(Expense item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    int index = getIndex();
+                    setStyle(index % 2 == 0 
+                        ? "-fx-background-color: white;" 
+                        : "-fx-background-color: #E0F7FA;");  // Light blue
+                } else {
+                    setStyle("");
+                }
+        
+                setOnMouseEntered(e -> setStyle("-fx-background-color: #B2EBF2;"));  // Hover highlight
+                setOnMouseExited(e -> {
+                    if (!empty) {
+                        int index = getIndex();
+                        setStyle(index % 2 == 0 
+                            ? "-fx-background-color: white;" 
+                            : "-fx-background-color: #E0F7FA;");
+                    } else {
+                        setStyle("");
+                    }
+                });
+            }
+        });
+
         Group group = farFundManager.getGroup(groupId);
         ObservableList<Expense> expenses = FXCollections.observableArrayList(group.getExpenses());
         table.setItems(expenses);
 
-        // Layout
-        HBox buttonsBox = new HBox(10, overviewBtn, plusBtn);
-        buttonsBox.setAlignment(Pos.CENTER_LEFT);
+        VBox layout = new VBox(10, topBar, table);
+        layout.setPadding(new Insets(10));
 
-        VBox layout = new VBox(10, buttonsBox, table);
-        layout.setPadding(new Insets(20));
-
-        return new Scene(layout, 600, 400);
+        return new Scene(layout, 600, 500);
     }
 }
 
