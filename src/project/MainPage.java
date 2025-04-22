@@ -1,5 +1,7 @@
 package project;
 
+import java.nio.file.Path;
+
 import org.w3c.dom.Text;
 
 import javafx.application.Application;
@@ -14,6 +16,11 @@ import javafx.scene.image.ImageView;
 
 public class MainPage extends Application {
     private Stage primaryStage; 
+    private FarFundManager farFundManager; 
+
+    public MainPage(FarFundManager farFundManager) {
+        this.farFundManager = farFundManager;
+    }
     
 
     @Override
@@ -24,6 +31,28 @@ public class MainPage extends Application {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: white;");
 
+         Path customShape = new Path();
+        customShape.getElements().addAll(
+            new MoveTo(56.5, -55.9),
+            new CubicCurveTo(72.3, -40.6, 83.7, -20.3, 84.5, 0.7),
+            new CubicCurveTo(85.2, 21.8, 75.2, 43.5, 59.4, 59.6),
+            new CubicCurveTo(43.5, 75.7, 21.8, 86.1, 0.6, 85.5),
+            new CubicCurveTo(-20.6, 84.9, -41.2, 73.3, -55.5, 57.3),
+            new CubicCurveTo(-69.9, 41.2, -78.1, 20.6, -79.2, -1.2),
+            new CubicCurveTo(-80.4, -22.9, -74.6, -45.9, -60.2, -61.1),
+            new CubicCurveTo(-45.9, -76.4, -22.9, -84, -1.3, -82.7),
+            new CubicCurveTo(20.3, -81.4, 40.6, -71.1, 56.5, -55.9)
+        );
+        customShape.setFill(Color.web("#238BFA")); 
+        customShape.setStroke(null); 
+      
+        customShape.setScaleX(5.0); 
+        customShape.setScaleY(5.0); 
+
+        customShape.setTranslateX(-100); 
+        customShape.setTranslateY(-100);
+ 
+        StackPane bluePart = new StackPane();
         
         VBox leftSide = new VBox();
         leftSide.setAlignment(Pos.CENTER);
