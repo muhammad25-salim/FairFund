@@ -1,4 +1,4 @@
-package project;
+package project.models;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ public class Expense {
         this.totalAmount = new SimpleDoubleProperty(totalAmount);
         this.payer = payer;
         this.participants = participants;
-        calculateBalances();
     }
 
    
@@ -28,6 +27,10 @@ public class Expense {
     public SimpleDoubleProperty totalAmountProperty() {
         return totalAmount;
     }
+
+    public void setPayer(User payer) {
+        this.payer = payer;
+    }    
 
     public User getPayer() {
         return payer;
@@ -55,15 +58,19 @@ public class Expense {
     }
 
     public void calculateBalances() {
-        double splitAmount = totalAmount.get() / participants.size();
-        for (User participant : participants) {
-            if (participant.equals(payer)) {
-                participant.setBalance(participant.getBalance() + (totalAmount.get() - splitAmount));
-            } else {
-                participant.setBalance(participant.getBalance() - splitAmount);
-            }
+        if (participants == null || participants.isEmpty()) {
+            return;
         }
+    
+        double splitAmount = totalAmount.get() / participants.size();
+    
+        // 1. Participants owe their share
+        for (User participant : participants) {
+            participant.setBalance(participant.getBalance() - splitAmount);
+        }
+    
+        // 2. Payer gets credited the full amount
+        payer.setBalance(payer.getBalance() + totalAmount.get());
     }
-
 }
 
