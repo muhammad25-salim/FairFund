@@ -1,4 +1,4 @@
-package project;
+package project.controllers;
 
 import java.nio.file.Path;
 
@@ -105,6 +105,11 @@ public class MainPage extends Application {
                 "-fx-background-color: transparent; -fx-border-color: #238BFA; -fx-text-fill: #238BFA; -fx-font-size: 16px; -fx-padding: 10px 20px;");
                 joinGroupBtn.setPrefWidth(180); 
                 joinGroupBtn.setOnAction(e -> openJoinGroup());
+                VBox buttonBox = new VBox(10); 
+                buttonBox.setAlignment(Pos.BOTTOM_RIGHT); 
+                buttonBox.setPadding(new Insets(90, 0, 150, 0)); 
+               
+                buttonBox.getChildren().addAll(createGroupBtn, joinGroupBtn);
 
         rightSide.getChildren().addAll(title, subTitle, createGroupBtn, joinGroupBtn);
 
