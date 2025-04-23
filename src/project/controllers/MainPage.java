@@ -53,43 +53,58 @@ public class MainPage extends Application {
         customShape.setTranslateX(-100);
         customShape.setTranslateY(-100); 
 
-        VBox leftSide = new VBox();
+        VBox leftSide = new VBox(20);
         leftSide.setAlignment(Pos.CENTER);
-        leftSide.setStyle("-fx-background-color: #238BFA; -fx-padding: 50px;");
+        Path customShape = new Path();
+        customShape.getElements().addAll(
+            new MoveTo(56.5, -55.9),
+            new CubicCurveTo(72.3, -40.6, 83.7, -20.3, 84.5, 0.7),
+            new CubicCurveTo(85.2, 21.8, 75.2, 43.5, 59.4, 59.6),
+            new CubicCurveTo(43.5, 75.7, 21.8, 86.1, 0.6, 85.5),
+            new CubicCurveTo(-20.6, 84.9, -41.2, 73.3, -55.5, 57.3),
+            new CubicCurveTo(-69.9, 41.2, -78.1, 20.6, -79.2, -1.2),
+            new CubicCurveTo(-80.4, -22.9, -74.6, -45.9, -60.2, -61.1),
+            new CubicCurveTo(-45.9, -76.4, -22.9, -84, -1.3, -82.7),
+            new CubicCurveTo(20.3, -81.4, 40.6, -71.1, 56.5, -55.9)
+        );
+        customShape.setFill(Color.web("#238BFA"));
+        customShape.setStroke(null); 
 
-        Image image = new Image("file:assets/illustration.png");
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(300);
-        imageView.setPreserveRatio(true);
+       
+        customShape.setScaleX(5.0); 
+        customShape.setScaleY(5.0); 
 
-        Text tagline = new Text("Split expenses effortlessly and keep track of shared costs with ease");
-        tagline.setFill(javafx.scene.paint.Color.WHITE);
-        tagline.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
-        tagline.setWrappingWidth(280);
-
-        leftSide.getChildren().addAll(imageView, tagline);
-
+        
+        customShape.setTranslateX(-100); 
+        customShape.setTranslateY(-100); 
         VBox rightSide = new VBox(20);
         rightSide.setAlignment(Pos.CENTER);
         rightSide.setPadding(new Insets(50));
 
          Text title = new Text("FAIR FUND");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        title.setFill(javafx.scene.paint.Color.BLACK);
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 37));
+        title.setFill(Color.web("#238BFA"));
+        VBox.setMargin(title, new Insets(50, 0, 0, 110));
+
 
         Text subTitle = new Text("Fair, Fast, Transparent");
         subTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        subTitle.setFill(Color.web("#000000"));
+
+        VBox.setMargin(subTitle, new Insets(-10, 0, 0, 110));
+
 
         Button createGroupBtn = new Button("Create group");
         createGroupBtn.setStyle(
                 "-fx-background-color: #238BFA; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
+                createGroupBtn.setPrefWidth(180);
         createGroupBtn.setOnAction(e -> openCreateGroup());
 
         Button joinGroupBtn = new Button("Join an existing group");
         joinGroupBtn.setStyle(
                 "-fx-background-color: transparent; -fx-border-color: #238BFA; -fx-text-fill: #238BFA; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        createGroupBtn.setStyle("-fx-background-color: #238BFA; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        createGroupBtn.setOnAction(e -> openCreateGroup());
+                joinGroupBtn.setPrefWidth(180); 
+                joinGroupBtn.setOnAction(e -> openJoinGroup());
 
         rightSide.getChildren().addAll(title, subTitle, createGroupBtn, joinGroupBtn);
 
