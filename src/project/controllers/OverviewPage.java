@@ -1,10 +1,4 @@
-package project;
-
-import javax.swing.GroupLayout.Group;
-import javax.swing.plaf.synth.Region;
-import javax.swing.table.TableColumn;
-import javax.swing.text.TableView;
-import javax.swing.text.TableView.TableRow;
+package project.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,12 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import project.models.FarFundManager;
-import project.models.User;
+import project.models.*;
 
 public class OverviewPage {
     public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
-       
+
         // Tab Buttons
         Button overviewBtn = new Button("Overview");
         overviewBtn.setStyle("-fx-background-color: #00AEEF; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;");
@@ -44,7 +37,6 @@ public class OverviewPage {
         topBar.setPadding(new Insets(20, 20, 10, 20));
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-        
         // Table
         TableView<User> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -57,7 +49,7 @@ public class OverviewPage {
         balanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asString("%.2f"));
         balanceColumn.setMinWidth(150);
 
-         // Zebra striping + hover effect
+        // Zebra striping + hover effect
         table.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(User item, boolean empty) {
@@ -84,24 +76,22 @@ public class OverviewPage {
                 });
             }
         });
-
+        
 
         table.getColumns().addAll(nameColumn, balanceColumn);
 
-       
+        // Populate with group data
         Group group = farFundManager.getGroup(groupId);
         ObservableList<User> users = FXCollections.observableArrayList(group.getUsers());
         table.setItems(users);
 
-        
-        HBox buttonsBox = new HBox(10, expensesBtn, plusBtn);
-        buttonsBox.setAlignment(Pos.CENTER_LEFT);
-        
-        VBox layout = new VBox(10, buttonsBox, table);
-        layout.setPadding(new Insets(20));
+        table.refresh();       
 
-        return new Scene(layout, 600, 400);
+        // Layout
+        VBox layout = new VBox(10, topBar, table);
+        layout.setPadding(new Insets(10));
+
+        return new Scene(layout, 600, 500);
     }
 }
-
 
