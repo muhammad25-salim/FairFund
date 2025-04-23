@@ -2,6 +2,8 @@ package project;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import project.controllers.MainPage;
+import project.models.*;
 
 public class Main extends Application {
     public static void main(String[] args) {
