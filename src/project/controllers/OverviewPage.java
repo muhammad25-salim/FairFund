@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import project.models.FarFundManager;
+import project.models.User;
 
 public class OverviewPage {
     public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
@@ -42,13 +44,19 @@ public class OverviewPage {
         topBar.setAlignment(Pos.CENTER_LEFT);
 
         
+        // Table
         TableView<User> table = new TableView<>();
-        TableColumn<User, String> nameColumn = new TableColumn<>("Name");
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        TableColumn<User, String> nameColumn = new TableColumn<>("Member Name");
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        nameColumn.setMinWidth(200);
 
-        TableColumn<User, String> balanceColumn = new TableColumn<>("Balance");
-        balanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asString());
+        TableColumn<User, String> balanceColumn = new TableColumn<>("Balance ($)");
+        balanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asString("%.2f"));
+        balanceColumn.setMinWidth(150);
 
+        
         table.getColumns().addAll(nameColumn, balanceColumn);
 
        
