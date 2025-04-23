@@ -136,3 +136,56 @@ public class NewExpensePage {
 
         return new Scene(root, 600, 400);
     }
+
+    
+    private static User findUserByName(List<User> users, String name) {
+        for (User u : users) {
+            if (u.getName().equals(name)) {
+                return u;
+            }
+        }
+        return null;
+    }
+    private static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private static void styleButtons(Button backBtn, Button saveBtn) {
+        backBtn.setStyle(
+                "-fx-background-color: #6478E9;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        saveBtn.setStyle(
+                "-fx-background-color: #00AEEF;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        backBtn.setOnMouseEntered(e -> backBtn.setStyle(
+                "-fx-background-color: #c0392b;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        ));
+
+        saveBtn.setOnMouseEntered(e -> saveBtn.setStyle(
+                "-fx-background-color:rgb(0, 80, 239);" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        ));
+    }
+}
+
