@@ -4,13 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "project.Main",
-            "projectName": "FairFund_b571dc11"
-        },
+
         {
             "type": "java",
             "name": "Current File",
@@ -21,8 +15,15 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
+            "mainClass": "main.java.project.Main",
+            "projectName": "FairFund_b571dc11"
+        },
+        {
+            "type": "java",
+            "name": "Main(1)",
+            "request": "launch",
             "mainClass": "project.Main",
-            "projectName": "FairFund_69e69dbf",
+            "projectName": "fairfund",
             "vmArgs": "--module-path \"C:/Users/MSI_GS77/OneDrive/Desktop/openjfx-23.0.2_windows-x64_bin-sdk/javafx-sdk-23.0.2/lib\" --add-modules javafx.controls,javafx.fxml"
         }
     ]
