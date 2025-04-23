@@ -1,8 +1,5 @@
 package project.controllers;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,15 +11,19 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import project.models.*;
+
 
 public class CreateGroupage {
 
     public static Scene getScene(Stage primaryStage, FarFundManager farFundManager) {
+    	
         VBox mainLayout = new VBox(15);
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setPadding(new Insets(20));
 
         StackPane roundedPanel = new StackPane();
+        
         roundedPanel.setStyle("-fx-background-color: #238BFA; -fx-background-radius: 20px; -fx-padding: 40px;");
         roundedPanel.setMaxWidth(350);
         roundedPanel.setMaxHeight(250);
@@ -45,21 +46,19 @@ public class CreateGroupage {
         Button createGroupBtn = new Button("Create group");
         createGroupBtn.setStyle("-fx-background-color: white; -fx-text-fill: #238BFA;");
         createGroupBtn.setOnAction(e -> {
-            String groupId = GidField.getText();
-            String groupName = GnameField.getText();
-            List<User> users = Arrays.asList(
-                new User("Mohammad Salim"),
-                new User("Ahmad Hamad"),
-                new User("AbdullAziz Shwan"),
-                new User("Mohammad Qadir")
-            );
-            farFundManager.createGroup(groupId, groupName, users);  
-            primaryStage.setScene(OverviewPage.getScene(primaryStage, farFundManager, groupId));  
+            String groupId = GidField.getText().trim();
+            String groupName = GnameField.getText().trim();
+
+            if (!groupId.isEmpty() && !groupName.isEmpty()) {
+                // Go to AddMembersPage instead of creating group here
+                primaryStage.setScene(AddMembersPage.getScene(primaryStage, farFundManager, groupId, groupName));
+            }
         });
 
         Text joinText = new Text("Join an existing group");
         joinText.setFill(Color.WHITE);
         joinText.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
+        
         joinText.setOnMouseClicked(e -> primaryStage.setScene(JoinGroupPage.getScene(primaryStage, farFundManager)));
 
         contentBox.getChildren().addAll(title, GnameField, GidField, createGroupBtn, joinText);
@@ -69,4 +68,3 @@ public class CreateGroupage {
         return new Scene(mainLayout, 600, 400);
     }
 }
-
