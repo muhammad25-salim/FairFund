@@ -41,7 +41,7 @@ public class User {
 
 
     
-
+    
     
     @Override
     public boolean equals(Object obj) {
@@ -51,7 +51,10 @@ public class User {
         return name.equals(user.name);
     }
 
-    
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 
 
 }
