@@ -108,20 +108,31 @@ public class NewExpensePage {
             primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId));
         });
 
-        VBox blueBox = new VBox(10, titleField, totalRow, new Label("paid for"), checkboxes);
+        
+        // BlueBox & Layout Styling
+        VBox blueBox = new VBox(10, titleField, totalRow, new Label("paid for"), checkboxesContainer);
         blueBox.setPadding(new Insets(20));
         blueBox.setAlignment(Pos.TOP_LEFT);
         blueBox.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
 
         StackPane stackPane = new StackPane(blueBox);
         StackPane.setMargin(blueBox, new Insets(50, 50, 50, 50));
-
+        // Button Styling
+        styleButtons(backBtn, saveBtn);
+        backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)));
+        // Button Box
+        HBox buttonsBox = new HBox();
+        buttonsBox.setPadding(new Insets(10));
+        buttonsBox.setAlignment(Pos.CENTER);
+        buttonsBox.setSpacing(10);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        buttonsBox.getChildren().addAll(backBtn, spacer, saveBtn);
+        // Root Layout
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(20));
-        root.setTop(new HBox(backBtn, new Region(), saveBtn));
+        root.setTop(buttonsBox);
         root.setCenter(stackPane);
 
         return new Scene(root, 600, 400);
     }
-}
-
