@@ -63,7 +63,7 @@ public class MainPage extends Application {
 
         ImageView imageView = null;
         try {
-            Image image = new Image("file:src/project/image/Welcome_image.png");
+            Image image = new Image("file:src/main/resources/Image/Welcome_image.png");
             imageView = new ImageView(image);
             imageView.setFitWidth(300);
             imageView.setPreserveRatio(true);
