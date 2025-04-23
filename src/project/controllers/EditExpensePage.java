@@ -6,9 +6,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import project.models.*;
+
 
 public class EditExpensePage {
+
     public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId, Expense expense) {
+        Group group = farFundManager.getGroup(groupId);
+        if (group == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initOwner(primaryStage);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Group not found!");
+            alert.showAndWait();
+            return new Scene(new VBox(), 600, 400);
+        }
+        
         // Back Button 
         Button backBtn = new Button("«");
         backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)));
@@ -23,27 +37,47 @@ public class EditExpensePage {
 
         // Total Field 
         TextField totalField = new TextField(String.valueOf(expense.getTotalAmount()));
+        totalField.setPromptText("Total");
         totalField.setMaxWidth(100);
-        totalField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
+
+        Label iqdLabel = new Label("IQD");
+        iqdLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+
+        HBox totalFieldWithLabel = new HBox(5, totalField, iqdLabel);
+        totalFieldWithLabel.setAlignment(Pos.CENTER_LEFT);
 
         // Paid By Dropdown 
         ComboBox<String> paidByDropdown = new ComboBox<>();
-        paidByDropdown.getItems().addAll("Mohammad Salim", "Ahmad Hamad", "Abdull Aziz Shwan", "Mohammad Qadir");
-        paidByDropdown.setValue(expense.getPayer().getName());
-
+        for (User user : group.getUsers()) {
+            paidByDropdown.getItems().add(user.getName());
+        }
+        if (expense.getPayer() != null) {
+            paidByDropdown.setValue(expense.getPayer().getName());
+        }
         // Horizontal Layout for Total and Paid By
-        HBox totalRow = new HBox(10, totalField, new Label("paid by"), paidByDropdown);
+        HBox totalRow = new HBox(10, totalFieldWithLabel, new Label("paid by"), paidByDropdown);
         totalRow.setAlignment(Pos.CENTER_LEFT);
 
-        // Checkboxes (Preselected)
-        CheckBox user1 = new CheckBox("Mohammad Qadir");
-        user1.setSelected(expense.getParticipants().contains(new User("Mohammad Qadir")));
-        CheckBox user2 = new CheckBox("Ahmad Hamad");
-        user2.setSelected(expense.getParticipants().contains(new User("Ahmad Hamad")));
-        CheckBox user3 = new CheckBox("Abdull Aziz Shwan");
-        user3.setSelected(expense.getParticipants().contains(new User("Abdull Aziz Shwan")));
-        CheckBox user4 = new CheckBox("Mohammad Salim");
-        user4.setSelected(expense.getParticipants().contains(new User("Mohammad Salim")));
+        VBox checkboxes = new VBox(5);
+        for (User user : group.getUsers()) {
+            CheckBox checkBox = new CheckBox(user.getName());
+            if (expense.getParticipants().contains(user)) {
+                checkBox.setSelected(true);
+            }
+            checkboxes.getChildren().add(checkBox);
+        }
+
+        CheckBox selectAllCheckbox = new CheckBox("Select All");
+        selectAllCheckbox.setOnAction(e -> {
+            boolean isSelected = selectAllCheckbox.isSelected();
+            for (javafx.scene.Node node : checkboxes.getChildren()) {
+                if (node instanceof CheckBox cb) {
+                    cb.setSelected(isSelected);
+                }
+            }
+        });
+
+        VBox checkboxesContainer = new VBox(10, selectAllCheckbox, checkboxes);
 
         saveBtn.setOnAction(e -> {
             // Update the expense with new values
