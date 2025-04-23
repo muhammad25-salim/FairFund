@@ -1,22 +1,24 @@
-package project;
+package project.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import project.models.*;
 
 public class NewExpensePage {
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
-        
-        Button backBtn = new Button("«");
-        backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)));
 
+    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
+        // UI Elements
+        Button backBtn = new Button("«");
         Button saveBtn = new Button("Save");
-        
+
         TextField titleField = new TextField();
         titleField.setPromptText("Title");
         titleField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
@@ -24,11 +26,22 @@ public class NewExpensePage {
         TextField totalField = new TextField();
         totalField.setPromptText("Total");
         totalField.setMaxWidth(100);
-
+        // Create a Label for "IQD" and align it to the right of the totalField
+        Label iqdLabel = new Label("IQD");
+        iqdLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        // Use an HBox to position the totalField and iqdLabel side by side
+        HBox totalFieldWithLabel = new HBox(5, totalField, iqdLabel);
+        totalFieldWithLabel.setAlignment(Pos.CENTER_LEFT);
+        // Get users from the selected group
+        List<User> groupUsers = farFundManager.getGroup(groupId).getUsers();
+        // Dropdown for Payer
         ComboBox<String> paidByDropdown = new ComboBox<>();
-        paidByDropdown.getItems().addAll("Mohammad Salim", "Ahmad Hamad", "AbdullAziz Shwan", "Mohammad Qadir");
-        paidByDropdown.setValue("Mohammad Salim");
-
+        for (User u : groupUsers) {
+            paidByDropdown.getItems().add(u.getName());
+        }
+        if (!groupUsers.isEmpty()) {
+            paidByDropdown.setValue(groupUsers.get(0).getName());  // default to first user
+        }
         
         HBox totalRow = new HBox(10, totalField, new Label("paid by"), paidByDropdown);
         totalRow.setAlignment(Pos.CENTER_LEFT);
