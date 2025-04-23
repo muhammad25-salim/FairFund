@@ -4,6 +4,7 @@ import javax.swing.GroupLayout.Group;
 import javax.swing.plaf.synth.Region;
 import javax.swing.table.TableColumn;
 import javax.swing.text.TableView;
+import javax.swing.text.TableView.TableRow;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,7 +57,35 @@ public class OverviewPage {
         balanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asString("%.2f"));
         balanceColumn.setMinWidth(150);
 
+         // Zebra striping + hover effect
+        table.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(User item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    int index = getIndex();
+                    setStyle(index % 2 == 0 
+                        ? "-fx-background-color: white;" 
+                        : "-fx-background-color: #E0F7FA;");  // Light blue shade
+                } else {
+                    setStyle("");
+                }
         
+                setOnMouseEntered(e -> setStyle("-fx-background-color: #B2EBF2;"));  // Slightly stronger hover blue
+                setOnMouseExited(e -> {
+                    if (!empty) {
+                        int index = getIndex();
+                        setStyle(index % 2 == 0 
+                            ? "-fx-background-color: white;" 
+                            : "-fx-background-color: #E0F7FA;");
+                    } else {
+                        setStyle("");
+                    }
+                });
+            }
+        });
+
+
         table.getColumns().addAll(nameColumn, balanceColumn);
 
        
