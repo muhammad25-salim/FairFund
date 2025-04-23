@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 public class OverviewPage {
     public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
        
-        
         // Tab Buttons
         Button overviewBtn = new Button("Overview");
         overviewBtn.setStyle("-fx-background-color: #00AEEF; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;");
@@ -42,8 +41,7 @@ public class OverviewPage {
         topBar.setPadding(new Insets(20, 20, 10, 20));
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-    
-       
+        
         TableView<User> table = new TableView<>();
         TableColumn<User, String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
