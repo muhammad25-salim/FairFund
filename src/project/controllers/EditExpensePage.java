@@ -80,35 +80,119 @@ public class EditExpensePage {
         VBox checkboxesContainer = new VBox(10, selectAllCheckbox, checkboxes);
 
         saveBtn.setOnAction(e -> {
-            // Update the expense with new values
-            expense.setTitle(titleField.getText());
-            expense.setTotalAmount(Double.parseDouble(totalField.getText()));
-            expense.getPayer().setName(paidByDropdown.getValue());
+            try {
+                if (titleField.getText().isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.initOwner(primaryStage);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("You should name the Expense!");
+                    alert.showAndWait();
+                    return;
+                }
 
-            
-            if (user1.isSelected()) expense.getParticipants().add(new User(user1.getText()));
-            if (user2.isSelected()) expense.getParticipants().add(new User(user2.getText()));
-            if (user3.isSelected()) expense.getParticipants().add(new User(user3.getText()));
-            if (user4.isSelected()) expense.getParticipants().add(new User(user4.getText()));
+                double newAmount;
+                try {
+                    newAmount = Double.parseDouble(totalField.getText());
+                    if (newAmount <= 0) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.initOwner(primaryStage);
+                        alert.setTitle("Invalid Amount");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Amount must be positive");
+                        alert.showAndWait();
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.initOwner(primaryStage);
+                    alert.setTitle("Invalid Input");
+                    alert.setHeaderText(null);
+                    alert.setContentText("The total should be a number!");
+                    alert.showAndWait();
+                    return;
+                }
 
-            expense.calculateBalances();
+                User newPayer = group.getUserByName(paidByDropdown.getValue());
+                if (newPayer == null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.initOwner(primaryStage);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Selected payer not found in group");
+                    alert.showAndWait();
+                    return;
+                }
 
-            primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId));
+                for (User user : group.getUsers()) {
+                    user.setBalance(0.0);
+                }
+
+                for (Expense existingExpense : group.getExpenses()) {
+                    if (!existingExpense.equals(expense)) {
+                        existingExpense.calculateBalances();
+                    }
+                }
+
+                expense.setTitle(titleField.getText());
+                expense.setTotalAmount(newAmount);
+                expense.setPayer(newPayer);
+
+                expense.getParticipants().clear();
+                for (javafx.scene.Node node : checkboxes.getChildren()) {
+                    if (node instanceof CheckBox cb && cb.isSelected()) {
+                        User participant = group.getUserByName(cb.getText());
+                        if (participant != null) {
+                            expense.getParticipants().add(participant);
+                        }
+                    }
+                }
+
+                if (expense.getParticipants().isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.initOwner(primaryStage);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("At least one participant must be selected!");
+                    alert.showAndWait();
+                    return;
+                }
+
+                expense.calculateBalances();
+                primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId));
+
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.initOwner(primaryStage);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+            }
         });
 
-        VBox checkboxes = new VBox(5, user1, user2, user3, user4);
-
         // Blue Rounded Box
-        VBox blueBox = new VBox(10, titleField, totalRow, new Label("paid for"), checkboxes);
+        VBox blueBox = new VBox(10, titleField, totalRow, new Label("paid for"), checkboxesContainer);
         blueBox.setPadding(new Insets(20));
         blueBox.setAlignment(Pos.TOP_LEFT);
         blueBox.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
 
         StackPane stackPane = new StackPane(blueBox);
-        StackPane.setMargin(blueBox, new Insets(50, 50, 50, 50));
+        StackPane.setMargin(blueBox, new Insets(50));
 
-        HBox buttonsBox = new HBox(10, backBtn, saveBtn);
-        buttonsBox.setAlignment(Pos.CENTER_LEFT);
+        backBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;");
+        backBtn.setOnMouseEntered(e -> backBtn.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+        backBtn.setOnMouseExited(e -> backBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+
+        saveBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;");
+        saveBtn.setOnMouseEntered(e -> saveBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+        saveBtn.setOnMouseExited(e -> saveBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox buttonsBox = new HBox(10, backBtn, spacer, saveBtn);
+        buttonsBox.setPadding(new Insets(10));
+        buttonsBox.setAlignment(Pos.CENTER);
 
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(20));
