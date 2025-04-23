@@ -39,10 +39,53 @@ public class AddMembersPage {
 
         List<TextField> memberInputs = new ArrayList<>();
 
+        // Create the first input field
         addNewMemberInput(inputList, memberInputs);
 
         Text instructions = new Text("Press 'Enter' to add new members");
         instructions.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
         instructions.setFill(Color.WHITE);
 
-    }}
+        Button saveButton = new Button("Save Group");
+        saveButton.setStyle("-fx-background-color: white; -fx-text-fill: #238BFA; -fx-font-weight: bold;");
+        saveButton.setOnAction(e -> {
+            List<User> members = new ArrayList<>();
+            for (TextField field : memberInputs) {
+                String name = field.getText().trim();
+                if (!name.isEmpty()) {
+                    members.add(new User(name));
+                }
+            }
+
+            if (!members.isEmpty()) {
+                farFundManager.createGroup(groupId, groupName, members);
+                primaryStage.setScene(OverviewPage.getScene(primaryStage, farFundManager, groupId));
+            }
+        });
+
+        contentBox.getChildren().addAll(title, inputList, instructions, saveButton);
+        roundedPanel.getChildren().add(contentBox);
+        mainLayout.getChildren().add(roundedPanel);
+
+        return new Scene(mainLayout, 600, 400);
+    }
+
+    private static void addNewMemberInput(VBox inputList, List<TextField> memberInputs) {
+        TextField memberField = new TextField();
+        memberField.setPromptText("Member name");
+        memberField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0; -fx-text-fill: white;");
+        memberField.setFont(Font.font(14));
+
+        memberField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                if (!memberField.getText().trim().isEmpty()) {
+                    addNewMemberInput(inputList, memberInputs);
+                }
+            }
+        });
+
+        memberInputs.add(memberField);
+        inputList.getChildren().add(memberField);
+        memberField.requestFocus();
+    }
+}
