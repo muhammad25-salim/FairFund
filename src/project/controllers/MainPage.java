@@ -82,22 +82,29 @@ public class MainPage extends Application {
         rightSide.setPadding(new Insets(50));
 
          Text title = new Text("FAIR FUND");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        title.setFill(javafx.scene.paint.Color.BLACK);
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 37));
+        title.setFill(Color.web("#238BFA"));
+        VBox.setMargin(title, new Insets(50, 0, 0, 110));
+
 
         Text subTitle = new Text("Fair, Fast, Transparent");
         subTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        subTitle.setFill(Color.web("#000000"));
+
+        VBox.setMargin(subTitle, new Insets(-10, 0, 0, 110));
+
 
         Button createGroupBtn = new Button("Create group");
         createGroupBtn.setStyle(
                 "-fx-background-color: #238BFA; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
+                createGroupBtn.setPrefWidth(180);
         createGroupBtn.setOnAction(e -> openCreateGroup());
 
         Button joinGroupBtn = new Button("Join an existing group");
         joinGroupBtn.setStyle(
                 "-fx-background-color: transparent; -fx-border-color: #238BFA; -fx-text-fill: #238BFA; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        createGroupBtn.setStyle("-fx-background-color: #238BFA; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        createGroupBtn.setOnAction(e -> openCreateGroup());
+                joinGroupBtn.setPrefWidth(180); 
+                joinGroupBtn.setOnAction(e -> openJoinGroup());
 
         rightSide.getChildren().addAll(title, subTitle, createGroupBtn, joinGroupBtn);
 
