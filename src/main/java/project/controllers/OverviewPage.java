@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import project.models.*;
 
+
 public class OverviewPage {
     public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId) {
 

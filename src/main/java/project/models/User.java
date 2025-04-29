@@ -39,10 +39,6 @@ public class User {
         this.balance.set(balance);
     }
 
-
-    
-    
-    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -55,10 +51,4 @@ public class User {
     public int hashCode() {
         return name.hashCode();
     }
-
-
 }
-
-
-
-

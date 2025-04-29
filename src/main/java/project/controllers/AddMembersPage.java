@@ -87,4 +87,5 @@ public class AddMembersPage {
         memberInputs.add(memberField);
         inputList.getChildren().add(memberField);
         memberField.requestFocus();
-    }}
+    }
+}
