@@ -17,7 +17,7 @@ public class Group {
     }
     
     public void addExpense(String title, double totalAmount, User payer, List<User> participants) {
-        Expense expense = new Expense(title, totalAmount, payer, participants);
+        Expense expense = new Expense(0, title, totalAmount, payer, participants);
         expenses.add(expense);
         recalculateBalances();
     }
@@ -37,10 +37,13 @@ public class Group {
     public void updateExpense(Expense oldExpense, Expense newExpense) {
         int index = expenses.indexOf(oldExpense);
         if (index != -1) {
-            
-            
-            // Apply new balances
-            newExpense.calculateBalances();
+            // First, remove the old expense impact
+            expenses.remove(oldExpense);
+            recalculateBalances();  // Recalculate balances before adding the new expense
+    
+            // Add the new expense
+            expenses.add(newExpense);
+            recalculateBalances();  // Recalculate again with the new expense
         }
     }
     
