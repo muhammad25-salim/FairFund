@@ -11,12 +11,14 @@ public class Expense {
     private SimpleDoubleProperty totalAmount; 
     private User payer; 
     private List<User> participants; 
+    private int id;
 
-    public Expense(String title, double totalAmount, User payer, List<User> participants) {
+    public Expense(int id,String title, double totalAmount, User payer, List<User> participants) {
         this.title = new SimpleStringProperty(title);
         this.totalAmount = new SimpleDoubleProperty(totalAmount);
         this.payer = payer;
         this.participants = participants;
+        this.id=id;
     }
 
    
@@ -27,7 +29,12 @@ public class Expense {
     public SimpleDoubleProperty totalAmountProperty() {
         return totalAmount;
     }
-
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public void setPayer(User payer) {
         this.payer = payer;
     }    

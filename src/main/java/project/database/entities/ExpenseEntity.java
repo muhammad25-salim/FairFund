@@ -12,9 +12,23 @@ public class ExpenseEntity {
     @DatabaseField
     private String title;
 
+    @DatabaseField
+    private double totalAmount;
 
-    public ExpenseEntity(String title) {
+    @DatabaseField
+    private String payer;
+
+    @DatabaseField
+    private String groupId;
+
+    public ExpenseEntity() {
+       
+    }
+    public ExpenseEntity(String title, double totalAmount, String payer, String groupId) {
         this.title = title;
+        this.totalAmount = totalAmount;
+        this.payer = payer;
+        this.groupId = groupId;        
     }
     public int getId() {
         return id;
@@ -27,6 +41,24 @@ public class ExpenseEntity {
     }
     public void setTitle(String title) {
         this.title = title;
+    }
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+    public String getPayer() {
+        return payer;
+    }
+    public void setPayer(String payer) {
+        this.payer = payer;
+    }
+    public String getGroupId() {
+        return groupId;
+    }
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
 }
