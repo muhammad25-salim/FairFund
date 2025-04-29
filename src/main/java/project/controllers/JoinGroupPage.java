@@ -17,7 +17,7 @@ import project.models.*;
 
 public class JoinGroupPage {
 
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager) {
+    public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager) {
         VBox mainLayout = new VBox(15);
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setPadding(new Insets(20));
@@ -42,9 +42,9 @@ public class JoinGroupPage {
         joinGroupBtn.setStyle("-fx-background-color: white; -fx-text-fill: #238BFA;");
         joinGroupBtn.setOnAction(e -> {
             String groupId = GidField.getText();
-            Group group = farFundManager.getGroup(groupId); 
+            Group group = FairFundManager.getGroup(groupId); 
             if (group != null) {
-                primaryStage.setScene(OverviewPage.getScene(primaryStage, farFundManager, groupId)); 
+                primaryStage.setScene(OverviewPage.getScene(primaryStage, FairFundManager, groupId)); 
             } else {
                 System.out.println("Group not found!"); 
             }
@@ -53,7 +53,7 @@ public class JoinGroupPage {
         Text createGroupText = new Text("Create Group");
         createGroupText.setFill(Color.WHITE);
         createGroupText.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
-        createGroupText.setOnMouseClicked(e -> primaryStage.setScene(CreateGroupage.getScene(primaryStage, farFundManager)));
+        createGroupText.setOnMouseClicked(e -> primaryStage.setScene(CreateGroupage.getScene(primaryStage, FairFundManager)));
 
         contentBox.getChildren().addAll(title, GidField, joinGroupBtn, createGroupText);
         roundedPanel.getChildren().add(contentBox);

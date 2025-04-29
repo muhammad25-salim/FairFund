@@ -12,18 +12,18 @@ import javafx.beans.property.SimpleStringProperty;
 import project.models.*;
 
 public class ExpensesPage {
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
+    public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId) {
         
         Button overviewBtn = new Button("Overview");
         overviewBtn.setStyle("-fx-background-color: white; -fx-border-color: #00AEEF; -fx-border-radius: 10; -fx-font-weight: bold;");
-        overviewBtn.setOnAction(e -> primaryStage.setScene(OverviewPage.getScene(primaryStage, farFundManager, groupId)));
+        overviewBtn.setOnAction(e -> primaryStage.setScene(OverviewPage.getScene(primaryStage, FairFundManager, groupId)));
         
         Button expensesBtn = new Button("Expenses");
         expensesBtn.setStyle("-fx-background-color: #00AEEF; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;");
 
         Button plusBtn = new Button("+");
         plusBtn.setStyle("-fx-font-size: 18px; -fx-background-color: #00AEEF; -fx-text-fill: white; -fx-background-radius: 100%; -fx-min-width: 30px; -fx-min-height: 30px;");
-        plusBtn.setOnAction(e -> primaryStage.setScene(NewExpensePage.getScene(primaryStage, farFundManager, groupId)));
+        plusBtn.setOnAction(e -> primaryStage.setScene(NewExpensePage.getScene(primaryStage, FairFundManager, groupId)));
         
         HBox tabs = new HBox(10, overviewBtn, expensesBtn);
         tabs.setAlignment(Pos.CENTER_LEFT);
@@ -55,7 +55,7 @@ public class ExpensesPage {
         table.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !table.getSelectionModel().isEmpty()) {
                 Expense selectedExpense = table.getSelectionModel().getSelectedItem();
-                primaryStage.setScene(EditExpensePage.getScene(primaryStage, farFundManager, groupId, selectedExpense));
+                primaryStage.setScene(EditExpensePage.getScene(primaryStage, FairFundManager, groupId, selectedExpense));
             }
         });
         
@@ -90,8 +90,8 @@ public class ExpensesPage {
 
                 deleteButton.setOnAction(event -> {
                     Expense expense = getTableView().getItems().get(getIndex());
-                    farFundManager.removeExpenseFromGroup(groupId, expense); 
-                    primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)); 
+                    FairFundManager.removeExpenseFromGroup(groupId, expense); 
+                    primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId)); 
                 });
             }
 
@@ -103,7 +103,7 @@ public class ExpensesPage {
         });
 
         table.getColumns().addAll(descriptionColumn, amountColumn, payerColumn, deleteColumn);
-        table.setItems(FXCollections.observableArrayList(farFundManager.getGroup(groupId).getExpenses()));
+        table.setItems(FXCollections.observableArrayList(FairFundManager.getGroup(groupId).getExpenses()));
 
         // Apply striped row styling
         table.setRowFactory(tv -> new TableRow<>() {
@@ -133,7 +133,7 @@ public class ExpensesPage {
             }
         });
 
-        Group group = farFundManager.getGroup(groupId);
+        Group group = FairFundManager.getGroup(groupId);
         ObservableList<Expense> expenses = FXCollections.observableArrayList(group.getExpenses());
         table.setItems(expenses);
 

@@ -12,9 +12,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        FarFundManager farFundManager = new FarFundManager();
+        FairFundManager FairFundManager = new FairFundManager();
 
-        MainPage mainPage = new MainPage(farFundManager);
+        MainPage mainPage = new MainPage(FairFundManager);
         mainPage.start(primaryStage);
     }
 }

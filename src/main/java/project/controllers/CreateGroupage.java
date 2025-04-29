@@ -16,7 +16,7 @@ import project.models.*;
 
 public class CreateGroupage {
 
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager) {
+    public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager) {
     	
         VBox mainLayout = new VBox(15);
         mainLayout.setAlignment(Pos.CENTER);
@@ -51,7 +51,7 @@ public class CreateGroupage {
 
             if (!groupId.isEmpty() && !groupName.isEmpty()) {
                 // Go to AddMembersPage instead of creating group here
-                primaryStage.setScene(AddMembersPage.getScene(primaryStage, farFundManager, groupId, groupName));
+                primaryStage.setScene(AddMembersPage.getScene(primaryStage, FairFundManager, groupId, groupName));
             }
         });
 
@@ -59,7 +59,7 @@ public class CreateGroupage {
         joinText.setFill(Color.WHITE);
         joinText.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
         
-        joinText.setOnMouseClicked(e -> primaryStage.setScene(JoinGroupPage.getScene(primaryStage, farFundManager)));
+        joinText.setOnMouseClicked(e -> primaryStage.setScene(JoinGroupPage.getScene(primaryStage, FairFundManager)));
 
         contentBox.getChildren().addAll(title, GnameField, GidField, createGroupBtn, joinText);
         roundedPanel.getChildren().add(contentBox);

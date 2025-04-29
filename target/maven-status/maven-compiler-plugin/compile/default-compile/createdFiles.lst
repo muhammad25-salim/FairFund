@@ -3,7 +3,7 @@ main\java\project\controllers\OverviewPage$1.class
 main\java\project\controllers\OverviewPage.class
 main\java\project\models\Expense.class
 main\java\project\controllers\CreateGroupage.class
-main\java\project\models\FarFundManager.class
+main\java\project\models\FairFundManager.class
 main\java\project\controllers\NewExpensePage.class
 main\java\project\Main.class
 main\java\project\models\Group.class

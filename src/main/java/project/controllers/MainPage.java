@@ -19,10 +19,10 @@ import javafx.scene.shape.CubicCurveTo;
 
 public class MainPage extends Application {
     private Stage primaryStage;
-    private FarFundManager farFundManager; 
+    private FairFundManager FairFundManager; 
 
-    public MainPage(FarFundManager farFundManager) {
-        this.farFundManager = farFundManager;
+    public MainPage(FairFundManager FairFundManager) {
+        this.FairFundManager = FairFundManager;
     }
 
     @Override
@@ -138,15 +138,15 @@ public class MainPage extends Application {
     }
 
     private void openCreateGroup() {
-        primaryStage.setScene(CreateGroupage.getScene(primaryStage, farFundManager));
+        primaryStage.setScene(CreateGroupage.getScene(primaryStage, FairFundManager));
     }
 
     private void openJoinGroup() {
-        primaryStage.setScene(JoinGroupPage.getScene(primaryStage, farFundManager));
+        primaryStage.setScene(JoinGroupPage.getScene(primaryStage, FairFundManager));
     }
 
-    public static void launchGUI(FarFundManager farFundManager) {
-        MainPage mainPage = new MainPage(farFundManager);
+    public static void launchGUI(FairFundManager FairFundManager) {
+        MainPage mainPage = new MainPage(FairFundManager);
         mainPage.start(new Stage());
 
     }

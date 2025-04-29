@@ -1,14 +1,15 @@
 package project.models;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class FarFundManager {
+public class FairFundManager {
     private Map<String, Group> groups;
 
-    public FarFundManager() {
+    public FairFundManager() {
         this.groups = new HashMap<>();
     }
 

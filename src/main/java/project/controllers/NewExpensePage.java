@@ -14,7 +14,7 @@ import project.models.*;
 
 public class NewExpensePage {
 
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
+    public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId) {
         // UI Elements
         Button backBtn = new Button("«");
         Button saveBtn = new Button("Save");
@@ -33,7 +33,7 @@ public class NewExpensePage {
         HBox totalFieldWithLabel = new HBox(5, totalField, iqdLabel);
         totalFieldWithLabel.setAlignment(Pos.CENTER_LEFT);
         // Get users from the selected group
-        List<User> groupUsers = farFundManager.getGroup(groupId).getUsers();
+        List<User> groupUsers = FairFundManager.getGroup(groupId).getUsers();
         // Dropdown for Payer
         ComboBox<String> paidByDropdown = new ComboBox<>();
         for (User u : groupUsers) {
@@ -99,9 +99,9 @@ public class NewExpensePage {
                 return;
             }
             // Add expense to group
-            farFundManager.addExpenseToGroup(groupId, title, totalAmount, payer, participants);
+            FairFundManager.addExpenseToGroup(groupId, title, totalAmount, payer, participants);
             // Navigate back to ExpensesPage
-            primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId));
+            primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId));
         });
 
         
@@ -115,7 +115,7 @@ public class NewExpensePage {
         StackPane.setMargin(blueBox, new Insets(50, 50, 50, 50));
         // Button Styling
         styleButtons(backBtn, saveBtn);
-        backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)));
+        backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId)));
         // Button Box
         HBox buttonsBox = new HBox();
         buttonsBox.setPadding(new Insets(10));

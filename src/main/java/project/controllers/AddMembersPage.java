@@ -18,7 +18,7 @@ import project.models.*;
 
 public class AddMembersPage {
 
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId, String groupName) {
+    public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId, String groupName) {
         VBox mainLayout = new VBox(15);
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setPadding(new Insets(20));
@@ -58,8 +58,8 @@ public class AddMembersPage {
             }
 
             if (!members.isEmpty()) {
-                farFundManager.createGroup(groupId, groupName, members);
-                primaryStage.setScene(OverviewPage.getScene(primaryStage, farFundManager, groupId));
+                FairFundManager.createGroup(groupId, groupName, members);
+                primaryStage.setScene(OverviewPage.getScene(primaryStage, FairFundManager, groupId));
             }
         });
 

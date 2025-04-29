@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import project.models.*;
 
 public class OverviewPage {
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId) {
+    public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId) {
 
         // Tab Buttons
         Button overviewBtn = new Button("Overview");
@@ -19,12 +19,12 @@ public class OverviewPage {
 
         Button expensesBtn = new Button("Expenses");
         expensesBtn.setStyle("-fx-background-color: white; -fx-border-color: #00AEEF; -fx-border-radius: 10; -fx-font-weight: bold;");
-        expensesBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)));
+        expensesBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId)));
 
         // Plus Button
         Button plusBtn = new Button("+");
         plusBtn.setStyle("-fx-font-size: 18px; -fx-background-color: #00AEEF; -fx-text-fill: white; -fx-background-radius: 100%; -fx-min-width: 30px; -fx-min-height: 30px;");
-        plusBtn.setOnAction(e -> primaryStage.setScene(NewExpensePage.getScene(primaryStage, farFundManager, groupId)));
+        plusBtn.setOnAction(e -> primaryStage.setScene(NewExpensePage.getScene(primaryStage, FairFundManager, groupId)));
 
         // Button Bar
         HBox tabs = new HBox(10, overviewBtn, expensesBtn);
@@ -81,7 +81,7 @@ public class OverviewPage {
         table.getColumns().addAll(nameColumn, balanceColumn);
 
         // Populate with group data
-        Group group = farFundManager.getGroup(groupId);
+        Group group = FairFundManager.getGroup(groupId);
         ObservableList<User> users = FXCollections.observableArrayList(group.getUsers());
         table.setItems(users);
 

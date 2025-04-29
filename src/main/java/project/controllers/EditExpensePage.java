@@ -11,8 +11,8 @@ import project.models.*;
 
 public class EditExpensePage {
 
-    public static Scene getScene(Stage primaryStage, FarFundManager farFundManager, String groupId, Expense expense) {
-        Group group = farFundManager.getGroup(groupId);
+    public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId, Expense expense) {
+        Group group = FairFundManager.getGroup(groupId);
         if (group == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initOwner(primaryStage);
@@ -25,7 +25,7 @@ public class EditExpensePage {
         
         // Back Button 
         Button backBtn = new Button("«");
-        backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId)));
+        backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId)));
 
         // Save Button 
         Button saveBtn = new Button("Save");
@@ -159,7 +159,7 @@ public class EditExpensePage {
                 }
 
                 expense.calculateBalances();
-                primaryStage.setScene(ExpensesPage.getScene(primaryStage, farFundManager, groupId));
+                primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId));
 
             } catch (Exception ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
