@@ -1,7 +1,6 @@
 package project.controllers;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -59,7 +58,6 @@ public class ExpensesPage {
             }
         });
         
-
         TableColumn<Expense, Void> deleteColumn = new TableColumn<>("Action");
         deleteColumn.setCellFactory(param -> new TableCell<>() {
             private final Button deleteButton = new Button("Delete");
@@ -132,10 +130,6 @@ public class ExpensesPage {
                 });
             }
         });
-
-        Group group = FairFundManager.getGroup(groupId);
-        ObservableList<Expense> expenses = FXCollections.observableArrayList(group.getExpenses());
-        table.setItems(expenses);
 
         VBox layout = new VBox(10, topBar, table);
         layout.setPadding(new Insets(10));
