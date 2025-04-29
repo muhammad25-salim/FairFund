@@ -13,7 +13,7 @@ public class Expense {
     private List<User> participants; 
     private int id;
 
-    public Expense(int id,String title, double totalAmount, User payer, List<User> participants) {
+    public Expense(int id ,String title, double totalAmount, User payer, List<User> participants) {
         this.title = new SimpleStringProperty(title);
         this.totalAmount = new SimpleDoubleProperty(totalAmount);
         this.payer = payer;
