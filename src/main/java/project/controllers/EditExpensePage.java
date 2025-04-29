@@ -13,15 +13,6 @@ public class EditExpensePage {
 
     public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId, Expense expense) {
         Group group = FairFundManager.getGroup(groupId);
-        if (group == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initOwner(primaryStage);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Group not found!");
-            alert.showAndWait();
-            return new Scene(new VBox(), 600, 400);
-        }
         
         // Back Button 
         Button backBtn = new Button("«");
@@ -124,20 +115,12 @@ public class EditExpensePage {
                     return;
                 }
 
-                for (User user : group.getUsers()) {
-                    user.setBalance(0.0);
-                }
-
-                for (Expense existingExpense : group.getExpenses()) {
-                    if (!existingExpense.equals(expense)) {
-                        existingExpense.calculateBalances();
-                    }
-                }
-
+                // Update the expense object with new values
                 expense.setTitle(titleField.getText());
                 expense.setTotalAmount(newAmount);
                 expense.setPayer(newPayer);
 
+                // Update participants list
                 expense.getParticipants().clear();
                 for (javafx.scene.Node node : checkboxes.getChildren()) {
                     if (node instanceof CheckBox cb && cb.isSelected()) {
@@ -158,7 +141,11 @@ public class EditExpensePage {
                     return;
                 }
 
-                expense.calculateBalances();
+                // call the method to update the expense in memory and database
+                System.out.println("Calling updateExpenseInGroup...");
+                FairFundManager.updateExpenseInGroup(groupId, expense, expense); // Update method call
+        
+                // Go back to the Expenses page
                 primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId));
 
             } catch (Exception ex) {
