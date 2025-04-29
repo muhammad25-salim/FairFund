@@ -31,7 +31,7 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-    }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -40,3 +40,4 @@ public class Main extends Application {
         MainPage mainPage = new MainPage(FairFundManager);
         mainPage.start(primaryStage);
     }
+}

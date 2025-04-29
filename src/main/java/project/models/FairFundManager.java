@@ -12,6 +12,7 @@ import java.util.Map;
 
 
 public class FairFundManager {
+    private DatabaseHelper databaseHelper;
     private Map<String, Group> groups;
 
     public FairFundManager() {
