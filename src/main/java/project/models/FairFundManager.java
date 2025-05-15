@@ -9,6 +9,7 @@ import project.database.entities.PaymentEntity;
 
 import java.lang.reflect.Member;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -258,6 +259,74 @@ public class FairFundManager {
             e.printStackTrace();
         }
         return groupsMap;
+    }
+
+    public void addPaymentToGroup(String groupId, double amount, String from, String to, LocalDate date) {
+        Group group = groups.get(groupId);
+        if (group != null) {
+            // Create payment with creator field set
+            Payment payment = new Payment(0, amount, from, to, date, currentUser.getUsername());
+            group.getPayments().add(payment);
+
+            // Adjust balances
+            Member payer = findMemberByName(group.getMembers(), from);
+            Member payee = findMemberByName(group.getMembers(), to);
+
+            if (payer != null && payee != null) {
+                payer.setBalance(payer.getBalance() + amount); // Increase payer's balance
+                payee.setBalance(payee.getBalance() - amount); // Decrease payee's balance
+            }
+
+            // Save payment to database
+            PaymentEntity paymentEntity = new PaymentEntity(amount, from, to, date, groupId, currentUser.getUsername());
+            try {
+                databaseHelper.savePayment(paymentEntity);
+                payment.setId(paymentEntity.getId()); // Set the ID from the database
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Add a method to remove a payment
+    public void removePaymentFromGroup(String groupId, Payment payment) {
+        Group group = groups.get(groupId);
+        if (group != null) {
+            // Remove payment from in-memory group
+            group.getPayments().remove(payment);
+            
+            // Reverse the balance changes
+            Member payer = findMemberByName(group.getMembers(), payment.getFrom());
+            Member payee = findMemberByName(group.getMembers(), payment.getTo());
+            
+            if (payer != null && payee != null) {
+                payer.setBalance(payer.getBalance() - payment.getAmount()); // Decrease payer's balance
+                payee.setBalance(payee.getBalance() + payment.getAmount()); // Increase payee's balance
+            }
+            
+            // Recalculate all balances to be sure everything is correct
+            group.recalculateBalances();
+            
+            // Delete from database
+            try {
+                if (payment.getId() != 0) {
+                    PaymentEntity paymentEntity = new PaymentEntity();
+                    paymentEntity.setId(payment.getId());
+                    databaseHelper.deletePayment(paymentEntity);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Member findMemberByName(List<Member> members, String name) {
+        for (Member member : members) {
+            if (member.getName().equals(name)) {
+                return member;
+            }
+        }
+        return null;
     }
 
     public void close() {
