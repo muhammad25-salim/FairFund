@@ -46,7 +46,7 @@ public class OverviewPage {
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         nameColumn.setMinWidth(200);
 
-        TableColumn<User, String> balanceColumn = new TableColumn<>("Balance ($)");
+        TableColumn<User, String> balanceColumn = new TableColumn<>("Balance (IQD)");
         balanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asString("%.2f"));
         balanceColumn.setMinWidth(150);
 
