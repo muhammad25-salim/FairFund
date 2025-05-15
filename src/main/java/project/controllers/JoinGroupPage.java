@@ -1,78 +1,108 @@
 package project.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import project.models.FairFundManager;
+import project.utils.ColorManager;
 
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 public class JoinGroupPage {
 
     public static Scene getScene(Stage primaryStage, FairFundManager fairFundManager) {
-        VBox mainLayout = new VBox(15);
-        mainLayout.setAlignment(Pos.CENTER);
+        BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(20));
+        mainLayout.setStyle("-fx-background-color: linear-gradient(to bottom right, " + 
+                            ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ", " + 
+                            ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + ");");
 
-        StackPane roundedPanel = new StackPane();
-        roundedPanel.setStyle("-fx-background-color: #238BFA; -fx-background-radius: 20px; -fx-padding: 40px;");
-        roundedPanel.setMaxWidth(350);
-        roundedPanel.setMaxHeight(200);
-
-        VBox contentBox = new VBox(10);
-        contentBox.setAlignment(Pos.CENTER);
-
-        Text title = new Text("Join a group");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        title.setFill(Color.WHITE);
-
-        TextField GidField = new TextField();
-        GidField.setPromptText("Group ID");
-        GidField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
-
-        Button joinGroupBtn = new Button("Join Group");
-        joinGroupBtn.setStyle("-fx-background-color: white; -fx-text-fill: #238BFA;");
-
-        joinGroupBtn.setOnAction(e -> {
-            String groupId = GidField.getText().trim();
-
-            if (groupId.isEmpty()) {
-                showAlert("Error", "Please enter a valid Group ID.");
-                return;
-            }
-
-            if (fairFundManager.loadGroup(groupId)) {
-                primaryStage.setScene(OverviewPage.getScene(primaryStage, fairFundManager, groupId));
-            } else {
-                showAlert("Error", "Group not found or failed to load.");
-            }
+        // Back Button with increased size
+        Button backButton = new Button("« Back");
+        backButton.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 16px;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 8 24 8 24;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 4, 0, 0, 1);"
+        );
+        backButton.setOnMouseEntered(e -> backButton.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.PRIMARY_HOVER_COLOR) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 16px;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 8 24 8 24;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 6, 0, 0, 2);" +
+            "-fx-cursor: hand;"
+        ));
+        backButton.setOnMouseExited(e -> backButton.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 16px;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 8 24 8 24;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 4, 0, 0, 1);"
+        ));
+        backButton.setOnAction(e -> {
+            MainPage mainPage = new MainPage(fairFundManager);
+            mainPage.start(primaryStage);
         });
 
-        Text createGroupText = new Text("Create Group");
-        createGroupText.setFill(Color.WHITE);
-        createGroupText.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
-        createGroupText.setOnMouseClicked(e -> primaryStage.setScene(CreateGroupage.getScene(primaryStage, fairFundManager)));
-
-        contentBox.getChildren().addAll(title, GidField, joinGroupBtn, createGroupText);
-        roundedPanel.getChildren().add(contentBox);
-        mainLayout.getChildren().add(roundedPanel);
-
-        return new Scene(mainLayout, 600, 400);
-    }
-
-    private static void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-}
+        // Top Layout with Back Button
+        HBox topLayout = new HBox(backButton);
+        topLayout.setAlignment(Pos.TOP_LEFT);
+        topLayout.setPadding(new Insets(10, 10, 20, 10));
+        
+        // User Groups Panel (Left Side)
+        VBox userGroupsPanel = new VBox(20);
+        userGroupsPanel.setPadding(new Insets(25));
+        userGroupsPanel.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_OPAQUE, 0.9) + ";" + 
+            "-fx-background-radius: 20px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 8, 0, 0, 2);"
+        );
+        userGroupsPanel.setPrefWidth(300);
+        userGroupsPanel.setMaxHeight(600);
+        
+        Text userGroupsTitle = new Text("Your Groups");
+        userGroupsTitle.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        userGroupsTitle.setFill(ColorManager.getPrimaryColor());
+        
+        // Styled separator
+        Separator separator = new Separator();
+        separator.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";");
+        separator.setOpacity(0.6);
+        
+        // Fetch groups created by the current user
+        Map<String, String> userGroupsMap = fairFundManager.getGroupsCreatedByCurrentUser();
+        List<String> userGroupNames = new ArrayList<>(userGroupsMap.values()); // Extract group names
+        
+        if (userGroupNames.isEmpty()) {
+            Label noGroupsLabel = new Label("You haven't created any groups yet");
+            noGroupsLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: " + 
+                                  ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + "; -fx-font-style: italic;");
+            noGroupsLabel.setWrapText(true);
+            userGroupsPanel.getChildren().addAll(userGroupsTitle, separator, noGroupsLabel);
+        } else {
+            ListView<String> groupsListView = new ListView<>(FXCollections.observableArrayList(userGroupNames));
+            groupsListView.setPrefHeight(500);
+            groupsListView.setStyle(
+                "-fx-background-color: transparent;" + 
+                "-fx-border-color: transparent;" +
+                "-fx-font-size: 16px;" +
+                "-fx-border-radius: 8px;"
+            );
+            
+           
