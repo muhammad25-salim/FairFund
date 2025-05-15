@@ -105,4 +105,4 @@ public class JoinGroupPage {
                 "-fx-border-radius: 8px;"
             );
             
-           
+            
