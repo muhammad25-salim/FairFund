@@ -231,3 +231,44 @@ public class JoinGroupPage {
             "-fx-background-radius: 30;" +
             "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 5, 0, 0, 1);"
         );
+
+         // Add hover effects
+        joinGroupBtn.setOnMouseEntered(e -> {
+            joinGroupBtn.setStyle(
+                "-fx-background-color: derive(" + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ", -10%);" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+                "-fx-font-size: 22px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 30;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 8, 0, 0, 2);" +
+                "-fx-cursor: hand;"
+            );
+        });
+        
+        joinGroupBtn.setOnMouseExited(e -> {
+            joinGroupBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+                "-fx-font-size: 22px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 30;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 5, 0, 0, 1);"
+            );
+        });
+
+        joinGroupBtn.setOnAction(e -> {
+            String groupId = groupIdField.getText().trim();
+
+            if (groupId.isEmpty()) {
+                showAlert("Error", "Please enter a valid Group ID.");
+                return;
+            }
+
+            if (fairFundManager.loadGroup(groupId)) {
+                primaryStage.setScene(OverviewPage.getScene(primaryStage, fairFundManager, groupId));
+            } else {
+                showAlert("Error", "Group not found or failed to load.");
+            }
+        });
+        
+        inputBox.getChildren().addAll(groupIdField, joinGroupBtn);
