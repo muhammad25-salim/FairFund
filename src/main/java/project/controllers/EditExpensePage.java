@@ -240,5 +240,77 @@ public class EditExpensePage {
         return new Scene(root, 700, 600);
     }
 
-    
+    // Added styleButtons method to match NewExpensePage
+    private static void styleButtons(Button backBtn, Button saveBtn) {
+        backBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) +";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        saveBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BUTTON_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        backBtn.setOnMouseEntered(e -> backBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.PRIMARY_HOVER_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;" +
+                "-fx-cursor: hand;"
+        ));
+
+        saveBtn.setOnMouseEntered(e -> saveBtn.setStyle(
+                "-fx-background-color:" + ColorManager.toRgbString(ColorManager.BUTTON_HOVER_COLOR) +";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;" +
+                "-fx-cursor: hand;"
+        ));
+
+        backBtn.setOnMouseExited(e -> backBtn.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) +";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+            "-fx-font-size: 14px;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 6 20 6 20;"
+        ));
+
+        saveBtn.setOnMouseExited(e -> saveBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BUTTON_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        ));
+    }
+
+    // Added showAlert method to match NewExpensePage
+    private static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        
+        // Style the alert dialog
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", " + 
+            "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -20%));" +
+            "-fx-border-radius: 5px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 10, 0, 0, 3);"
+        );
+        dialogPane.lookup(".content.label").setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 14px;");
+        
+        alert.showAndWait();
+    }
 }
