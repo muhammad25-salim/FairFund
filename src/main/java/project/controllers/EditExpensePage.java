@@ -186,34 +186,59 @@ public class EditExpensePage {
             }
         });
 
-        // Blue Rounded Box
-        VBox blueBox = new VBox(10, titleField, totalRow, new Label("paid for"), checkboxesContainer);
-        blueBox.setPadding(new Insets(20));
+         // Enhanced content box with spacing 
+        VBox blueBox = new VBox(20);
+        blueBox.getChildren().addAll(
+            titleText, 
+            titleField, 
+            new Separator(), // visual separator  
+            totalRow, 
+            new Separator(), // visual separator 
+            paidForLabel, 
+            checkboxesContainer
+        );
+        blueBox.setPadding(new Insets(30));
         blueBox.setAlignment(Pos.TOP_LEFT);
-        blueBox.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
+        
+        // Enhanced background with gradient 
+        blueBox.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", " + 
+            "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -15%));" + 
+            "-fx-background-radius: 20px;"
+        );
 
         StackPane stackPane = new StackPane(blueBox);
-        StackPane.setMargin(blueBox, new Insets(50));
+        StackPane.setMargin(blueBox, new Insets(20));
 
-        backBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;");
-        backBtn.setOnMouseEntered(e -> backBtn.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
-        backBtn.setOnMouseExited(e -> backBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+        // Button styling to match NewExpensePage
+        styleButtons(backBtn, saveBtn);
 
-        saveBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;");
-        saveBtn.setOnMouseEntered(e -> saveBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
-        saveBtn.setOnMouseExited(e -> saveBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+        backBtn.setOnAction(e -> {
+            // Close the modal
+            Stage popupStage = (Stage) backBtn.getScene().getWindow();
+            popupStage.close();
+            
+            // After going back, refresh the ExpensesPage in the main window
+            ExpensesPage.refreshExpensesPage(primaryStage, FairFundManager, groupId);
+        });
 
+        // Button box with spacer to match NewExpensePage
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         HBox buttonsBox = new HBox(10, backBtn, spacer, saveBtn);
         buttonsBox.setPadding(new Insets(10));
         buttonsBox.setAlignment(Pos.CENTER);
 
+        // Root layout with subtle background to match NewExpensePage
         BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ";");
         root.setPadding(new Insets(20));
         root.setTop(buttonsBox);
         root.setCenter(stackPane);
 
-        return new Scene(root, 600, 400);
+        return new Scene(root, 700, 600);
     }
+
+    
 }
