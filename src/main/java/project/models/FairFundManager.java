@@ -4,6 +4,10 @@ import project.database.DatabaseHelper;
 import project.database.entities.GroupEntity;
 import project.database.entities.UserEntity;
 import project.database.entities.ExpenseEntity;
+import project.database.entities.MemberEntity;
+import project.database.entities.PaymentEntity;
+
+import java.lang.reflect.Member;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +16,10 @@ import java.util.Map;
 
 
 public class FairFundManager {
+
+    private DatabaseHelper databaseHelper;
     private Map<String, Group> groups;
+    private UserEntity currentUser;
 
     public FairFundManager() {
         try {
@@ -23,19 +30,33 @@ public class FairFundManager {
         this.groups = new HashMap<>();
     }
 
-    
-    public void createGroup(String groupId, String groupName, List<User> users) {
-        Group group = new Group(groupId, groupName, users);
+    // Set current user
+    public void setCurrentUser(UserEntity currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public UserEntity getCurrentUser() {
+        return currentUser;
+    }
+
+    public void createGroup(String groupId, String groupName, List<Member> Members) {
+        // Ensure the currentUser is set before using it
+        if (currentUser == null) {
+            throw new IllegalStateException("Current user is not set.");
+        }
+        // Create a new group
+        Group group = new Group(groupId, groupName, Members);
         groups.put(groupId, group);
+
         // Save the group to the database
-        GroupEntity groupEntity = new GroupEntity(groupId, groupName);
+        GroupEntity groupEntity = new GroupEntity(groupId, groupName, currentUser.getUsername());
         try {
             databaseHelper.saveGroup(groupEntity);
 
-            // Save users to the database
-            for (User user : users) {
-                UserEntity userEntity = new UserEntity(user.getName(), groupEntity);
-                databaseHelper.saveUser(userEntity);
+            // Save Members to the database with the correct groupId
+            for (Member member : Members) {
+                MemberEntity memberEntity = new MemberEntity(member.getName(), groupEntity);
+                databaseHelper.saveMember(memberEntity);
             }
         } catch (SQLException e) {
             e.printStackTrace();
