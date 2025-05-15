@@ -189,39 +189,47 @@ public class FairFundManager {
 
     public boolean loadGroup(String groupId) {
         try {
-            // Load group entity
             GroupEntity groupEntity = databaseHelper.getGroupDao().queryForId(groupId);
             if (groupEntity == null) {
                 System.out.println("Group not found in database: " + groupId);
                 return false;
             }
     
-            // Load users
-            List<UserEntity> userEntities = databaseHelper.getUsersByGroup(groupEntity);
-            List<User> users = new ArrayList<>();
-            for (UserEntity ue : userEntities) {
-                users.add(new User(ue.getName()));
+            List<MemberEntity> memberEntities = databaseHelper.getMembersByGroup(groupEntity);
+            List<Member> members = new ArrayList<>();
+            for (MemberEntity ue : memberEntities) {
+                members.add(new Member(ue.getName()));
             }
     
-            // Create group
-            Group group = new Group(groupId, groupEntity.getName(), users);
+            Group group = new Group(groupId, groupEntity.getName(), members);
     
             // Load expenses
             List<ExpenseEntity> expenseEntities = databaseHelper.getExpensesByGroup(groupId);
             for (ExpenseEntity ee : expenseEntities) {
-                User payer = group.getUserByName(ee.getPayer());
-                if (payer == null) continue; // If payer not found, skip
+                Member payer = group.getMemberByName(ee.getPayer());
+                if (payer == null) continue;
     
-                // Assume all users are participants (or you can customize this)
-                List<User> participants = new ArrayList<>(group.getUsers());
-                Expense expense = new Expense(ee.getId(), ee.getTitle(), ee.getTotalAmount(), payer, participants);  // Use the ID from the database
+                List<MemberEntity> participantEntities = databaseHelper.getParticipantsByExpense(ee);
+                List<Member> participants = new ArrayList<>();
+                for (MemberEntity ue : participantEntities) {
+                    Member u = group.getMemberByName(ue.getName());
+                    if (u != null) participants.add(u);
+                }
+    
+                Expense expense = new Expense(ee.getId(), ee.getTitle(), ee.getTotalAmount(), payer, participants);
+                expense.setCreator(ee.getCreator());  // Set the creator
                 group.getExpenses().add(expense);
             }
+            
+            // Load payments
+            List<PaymentEntity> paymentEntities = databaseHelper.getPaymentsByGroup(groupId);
+            for (PaymentEntity pe : paymentEntities) {
+                Payment payment = new Payment(pe.getId(), pe.getAmount(), pe.getFrom(), pe.getTo(), pe.getDate(), pe.getCreator());
+                group.getPayments().add(payment);
+            }
     
-            // Recalculate balances for the loaded group
-            group.recalculateBalances();  // Recalculate balances after loading the group
-    
-            // Put group into memory
+            // Calculate balances considering both expenses and payments
+            group.recalculateBalances();
             groups.put(groupId, group);
     
             return true;
@@ -237,6 +245,19 @@ public class FairFundManager {
 
     public Map<String, Group> getGroups() {
         return groups;
+    }
+
+    public Map<String, String> getGroupsCreatedByCurrentUser() {
+        Map<String, String> groupsMap = new HashMap<>();
+        try {
+            List<GroupEntity> groups = databaseHelper.getGroupsByCreator(currentUser.getUsername());
+            for (GroupEntity group : groups) {
+                groupsMap.put(group.getId(), group.getName()); // Map groupId to group name
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return groupsMap;
     }
 
     public void close() {
