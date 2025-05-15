@@ -63,28 +63,37 @@ public class FairFundManager {
         }
     }
 
-    
-    public void addExpenseToGroup(String groupId, String title, double totalAmount, User payer, List<User> participants) {
+    public void addExpenseToGroup(String groupId, String title, double totalAmount, Member payer, List<Member> participants) {
         Group group = groups.get(groupId);
         if (group != null) {
-            // Create a new Expense object in memory (with a dummy ID, 0)
+            // Create expense with creator set
             Expense expense = new Expense(0, title, totalAmount, payer, participants);
-    
-            // Save the expense to the database
+            expense.setCreator(currentUser.getUsername());  // Set the creator here
+            
             ExpenseEntity expenseEntity = new ExpenseEntity(title, totalAmount, payer.getName(), groupId);
+            expenseEntity.setCreator(currentUser.getUsername());  // Set creator in entity
+            
             try {
-                // Save to DB and set the real ID from the database
-                databaseHelper.saveExpense(expenseEntity);  // Save to database
+                databaseHelper.saveExpense(expenseEntity);
+                expense.setId(expenseEntity.getId());
     
-                // After saving, set the real ID to in-memory expense
-                expense.setId(expenseEntity.getId());  // Update the real ID after insertion
-                group.getExpenses().add(expense);  // Add the expense with the correct ID to the group
+                List<MemberEntity> participantEntities = new ArrayList<>();
+                for (Member u : participants) {
+                    for (MemberEntity ue : databaseHelper.getMembersByGroup(new GroupEntity(groupId, group.getGroupName(), currentUser.getUsername()))) {
+                        if (ue.getName().equals(u.getName())) {
+                            participantEntities.add(ue);
+                            break;
+                        }
+                    }
+                }
     
-                // Call recalculateBalances to update user balances
-                group.recalculateBalances();  // Make sure balances are updated after adding an expense
+                // Save participants to the database
+                databaseHelper.saveExpenseParticipants(expenseEntity, participantEntities);
     
-                // Log the real ID after saving
-                System.out.println("Expense added with real ID: " + expense.getId());  // Debugging line here
+                group.getExpenses().add(expense);
+                group.recalculateBalances();
+                
+                System.out.println("Expense added with real ID: " + expense.getId());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -142,10 +151,28 @@ public class FairFundManager {
                     expenseEntity.setTotalAmount(newExpense.getTotalAmount());
                     expenseEntity.setPayer(newExpense.getPayer().getName());
                     expenseEntity.setGroupId(groupId);
+
+                    // Preserve the creator field
+                    expenseEntity.setCreator(oldExpense.getCreator());  // Ensure the creator is not lost
     
                     // Save the updated expense to the database
                     databaseHelper.saveExpense(expenseEntity);  // This updates the expense in DB
     
+                    // Delete old participants
+                    databaseHelper.deleteParticipantsByExpense(expenseEntity);
+
+                    // Add new participants
+                    List<MemberEntity> participantEntities = new ArrayList<>();
+                    for (Member u : newExpense.getParticipants()) {
+                        for (MemberEntity ue : databaseHelper.getMembersByGroup(new GroupEntity(groupId, group.getGroupName(), currentUser.getUsername()))) {
+                            if (ue.getName().equals(u.getName())) {
+                                participantEntities.add(ue);
+                                break;
+                            }
+                        }
+                    }
+                    databaseHelper.saveExpenseParticipants(expenseEntity, participantEntities);
+
                     // Log the update for debugging
                     System.out.println("Expense updated in database with ID: " + newExpense.getId());
                 } catch (SQLException e) {
@@ -158,7 +185,7 @@ public class FairFundManager {
         } else {
             System.out.println("Group not found!");
         }
-    }
+    } 
 
     public boolean loadGroup(String groupId) {
         try {
