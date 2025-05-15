@@ -169,3 +169,65 @@ public class JoinGroupPage {
                     }
                 }
             });
+
+              // Add a hint text
+            Label hintLabel = new Label("Double-click to open a group");
+            hintLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + 
+                             ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + "; -fx-font-style: italic;");
+            
+            userGroupsPanel.getChildren().addAll(userGroupsTitle, separator, groupsListView, hintLabel);
+        }
+        
+        // Join Group Panel (Center)
+        StackPane joinGroupPanel = new StackPane();
+        joinGroupPanel.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" + 
+            "-fx-background-radius: 30px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 15, 0, 0, 5);"
+        );
+        joinGroupPanel.setPrefWidth(650);
+        joinGroupPanel.setPrefHeight(550);
+
+        VBox joinGroupContent = new VBox(40);
+        joinGroupContent.setAlignment(Pos.CENTER);
+        joinGroupContent.setPadding(new Insets(50));
+
+        Text joinGroupTitle = new Text("Join a Group");
+        joinGroupTitle.setFont(Font.font("Arial", FontWeight.BOLD, 42));
+        joinGroupTitle.setFill(ColorManager.TEXT_COLOR);
+
+        // Description text
+        Text descriptionText = new Text("Enter a group ID to join an existing group or create a new one");
+        descriptionText.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        descriptionText.setFill(ColorManager.TEXT_COLOR);
+        descriptionText.setOpacity(0.8);
+
+        VBox inputBox = new VBox(15);
+        inputBox.setMaxWidth(450);
+        inputBox.setAlignment(Pos.CENTER);
+
+        TextField groupIdField = new TextField();
+        groupIdField.setPromptText("Enter Group ID");
+        groupIdField.setMinHeight(60);
+        groupIdField.setPrefWidth(450);
+        groupIdField.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-border-width: 0 0 2 0;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 20px;" +
+            "-fx-padding: 15 15 15 15;" +
+            "-fx-background-radius: 10 10 0 0;"
+        );
+        
+        Button joinGroupBtn = new Button("Join Group");
+        joinGroupBtn.setPrefWidth(300);
+        joinGroupBtn.setPrefHeight(60);
+        joinGroupBtn.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-font-size: 22px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 30;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 5, 0, 0, 1);"
+        );
