@@ -105,4 +105,24 @@ public class JoinGroupPage {
                 "-fx-border-radius: 8px;"
             );
             
-            
+            // Customize list cells
+            groupsListView.setCellFactory(lv -> new ListCell<String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        HBox cellBox = new HBox(10);
+                        cellBox.setAlignment(Pos.CENTER_LEFT);
+                        
+                        Label groupName = new Label(item);
+                        groupName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: " + 
+                                         ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+                        
+                        cellBox.getChildren().add(groupName);
+                        cellBox.setStyle("-fx-padding: 10px;");
+                        
+                        setText(null);
+                        setGraphic(cellBox);
