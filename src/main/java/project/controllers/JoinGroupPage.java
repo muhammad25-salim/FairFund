@@ -126,3 +126,46 @@ public class JoinGroupPage {
                         
                         setText(null);
                         setGraphic(cellBox);
+
+                        
+                      // Add hover effect
+                        setOnMouseEntered(e -> {
+                            cellBox.setStyle("-fx-background-color: " + 
+                                           ColorManager.toRgbString(ColorManager.HOVER_BLUE_START) + 
+                                           "; -fx-background-radius: 5px; -fx-padding: 10px;");
+                            setCursor(javafx.scene.Cursor.HAND);
+                        });
+                        
+                        setOnMouseExited(e -> {
+                            cellBox.setStyle("-fx-background-color: transparent; -fx-padding: 10px;");
+                            setCursor(javafx.scene.Cursor.DEFAULT);
+                        });
+                    }
+                    setPrefHeight(60);
+                }
+            });
+
+            groupsListView.setOnMouseClicked((MouseEvent event) -> {
+                if (event.getClickCount() == 2) { // Double-click
+                    String selectedGroupName = groupsListView.getSelectionModel().getSelectedItem();
+                    if (selectedGroupName != null) {
+                        // Find the corresponding groupId
+                        String selectedGroupId = userGroupsMap.entrySet()
+                            .stream()
+                            .filter(entry -> entry.getValue().equals(selectedGroupName))
+                            .map(Map.Entry::getKey)
+                            .findFirst()
+                            .orElse(null);
+
+                        if (selectedGroupId != null) {
+                            if (fairFundManager.loadGroup(selectedGroupId)) {
+                                primaryStage.setScene(OverviewPage.getScene(primaryStage, fairFundManager, selectedGroupId));
+                            } else {
+                                showAlert("Error", "Failed to load the selected group.");
+                            }
+                        } else {
+                            showAlert("Error", "Group ID not found for the selected group.");
+                        }
+                    }
+                }
+            });
