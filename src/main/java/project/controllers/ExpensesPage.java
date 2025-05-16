@@ -1,6 +1,7 @@
 package project.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,31 +9,69 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.stage.Modality;
+import javafx.scene.image.ImageView;
 import project.models.*;
+import project.utils.ColorManager;
 
 public class ExpensesPage {
+    private static TableView<Expense> table;  // Declare a static reference to the TableView
+
     public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId) {
         
+        // Tab Buttons 
         Button overviewBtn = new Button("Overview");
-        overviewBtn.setStyle("-fx-background-color: white; -fx-border-color: #00AEEF; -fx-border-radius: 10; -fx-font-weight: bold;");
+        overviewBtn.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + "; -fx-border-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-border-radius: 10; -fx-font-weight: bold; -fx-font-size: 18px;");
         overviewBtn.setOnAction(e -> primaryStage.setScene(OverviewPage.getScene(primaryStage, FairFundManager, groupId)));
-        
+
         Button expensesBtn = new Button("Expenses");
-        expensesBtn.setStyle("-fx-background-color: #00AEEF; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;");
+        expensesBtn.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-font-size: 18px;");
 
+        // Button Bar
+        HBox tabs = new HBox(20, overviewBtn, expensesBtn); // Increased spacing
+        tabs.setAlignment(Pos.CENTER);
+
+        // Plus Button
         Button plusBtn = new Button("+");
-        plusBtn.setStyle("-fx-font-size: 18px; -fx-background-color: #00AEEF; -fx-text-fill: white; -fx-background-radius: 100%; -fx-min-width: 30px; -fx-min-height: 30px;");
-        plusBtn.setOnAction(e -> primaryStage.setScene(NewExpensePage.getScene(primaryStage, FairFundManager, groupId)));
-        
-        HBox tabs = new HBox(10, overviewBtn, expensesBtn);
-        tabs.setAlignment(Pos.CENTER_LEFT);
+        plusBtn.setStyle("-fx-font-size: 24px; -fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-background-radius: 100%; -fx-min-width: 40px; -fx-min-height: 40px;");
+        plusBtn.setOnAction(e -> {
+            Stage popup = new Stage();
+            popup.setTitle("Add Expense");
+            popup.setScene(NewExpensePage.getScene(popup, FairFundManager, groupId));
+            popup.initOwner(primaryStage);
+            popup.initModality(Modality.WINDOW_MODAL);
+            popup.show();
+        });
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
+        // Add "Expense" label under the plus button
+        Label expenseLabel = new Label("Expense");
+        expenseLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-font-weight: bold;");
 
-        HBox topBar = new HBox(10, tabs, spacer, plusBtn);
-        topBar.setAlignment(Pos.CENTER_LEFT);
-        topBar.setPadding(new Insets(20, 20, 10, 20));
+        // Create VBox to stack the button and label vertically
+        VBox plusBtnWithLabel = new VBox(5, plusBtn, expenseLabel);
+        plusBtnWithLabel.setAlignment(Pos.CENTER);
+
+        final ImageView menuIcon;
+        try {
+            menuIcon = new ImageView(new javafx.scene.image.Image("file:src/main/resources/Image/Menu.png"));
+            menuIcon.setFitWidth(35);
+            menuIcon.setFitHeight(35);
+            
+            // Add hover effect to menu icon
+            menuIcon.setStyle("-fx-cursor: hand;");
+            menuIcon.setOpacity(0.8);
+            menuIcon.setOnMouseEntered(e -> {
+                menuIcon.setOpacity(1.0);
+                menuIcon.setEffect(new javafx.scene.effect.DropShadow(10, ColorManager.BLACK_SEMI_TRANSPARENT));
+            });
+            menuIcon.setOnMouseExited(e -> {
+                menuIcon.setOpacity(0.8);
+                menuIcon.setEffect(null);
+            });
+        } catch (Exception ex) {
+            System.out.println("Error loading menu icon: " + ex.getMessage());
+            return new Scene(new VBox(new Label("Failed to load menu icon.")), 600, 400);
+        }
 
         TableView<Expense> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -137,7 +176,3 @@ public class ExpensesPage {
         return new Scene(layout, 600, 500);
     }
 }
-
-
-
-
