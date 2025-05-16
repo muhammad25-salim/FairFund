@@ -73,6 +73,59 @@ public class ExpensesPage {
             return new Scene(new VBox(new Label("Failed to load menu icon.")), 600, 400);
         }
 
+        // Create a custom context menu with enhanced styling
+        ContextMenu menu = new ContextMenu();
+        menu.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + "; " +
+                      "-fx-background-radius: 15px; " +
+                      "-fx-border-radius: 15px; " + 
+                      "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BORDER_COLOR) + "; " +
+                      "-fx-border-width: 1px; " +
+                      "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 15, 0, 0, 5);");
+
+        // Create menu items with enhanced styling and icons
+        MenuItem settingsItem = createMenuItem("Settings", "file:src/main/resources/Image/settings.png");
+        MenuItem aboutUsItem = createMenuItem("About Us", "file:src/main/resources/Image/info.png");
+        MenuItem exportItem = createMenuItem("Export PDF", "file:src/main/resources/Image/pdf.png");
+        MenuItem paymentsItem = createMenuItem("Payments", "file:src/main/resources/Image/payment.png");
+        MenuItem exitGroupItem = createMenuItem("Exit Group", "file:src/main/resources/Image/exit.png");
+        MenuItem logoutItem = createMenuItem("Log Out", "file:src/main/resources/Image/logout.png");
+
+        // Add separator before logout items
+        SeparatorMenuItem separator = new SeparatorMenuItem();
+        separator.setStyle("-fx-padding: 5px 0;");
+
+        menu.getItems().addAll(settingsItem, aboutUsItem, exportItem, paymentsItem, separator, exitGroupItem, logoutItem);
+
+        menuIcon.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+            // Position the menu below the icon with a small offset
+            menu.show(menuIcon, event.getScreenX() - 10, event.getScreenY() + 10);
+        });
+
+        // Handle menu actions
+        settingsItem.setOnAction(e -> primaryStage.setScene(SettingsPage.getScene(primaryStage, FairFundManager, groupId)));
+        aboutUsItem.setOnAction(e -> primaryStage.setScene(AboutUsPage.getScene(primaryStage, FairFundManager, groupId)));
+        exportItem.setOnAction(e -> {
+            Group group = FairFundManager.getGroup(groupId);
+            project.utils.PdfExporter.exportGroupReport(group, "group_report_" + groupId + ".pdf");
+        });
+        paymentsItem.setOnAction(e -> primaryStage.setScene(PaymentsPage.getScene(primaryStage, FairFundManager, groupId)));
+        
+        // Exit group action - return to main page
+        exitGroupItem.setOnAction(e -> {
+            MainPage mainPage = new MainPage(FairFundManager);
+            mainPage.start(primaryStage);
+        });
+
+        // Log out action - return to login page
+        logoutItem.setOnAction(e -> {
+            primaryStage.setScene(LoginPage.getScene(primaryStage));
+        });
+
+        // Top Bar - matching OverviewPage layout
+        HBox topBar = new HBox(400, menuIcon, tabs, plusBtnWithLabel); 
+        topBar.setPadding(new Insets(30, 30, 20, 30));
+        topBar.setAlignment(Pos.CENTER);
+
         TableView<Expense> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
