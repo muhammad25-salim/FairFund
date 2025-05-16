@@ -305,4 +305,36 @@ public class JoinGroupPage {
             "-fx-background-radius: 25;" +
             "-fx-border-radius: 25;"
         );
+
+          
+        // Add hover effects
+        createGroupBtn.setOnMouseEntered(e -> {
+            createGroupBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_VERY_TRANSPARENT, 0.1) + ";" +
+                "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+                "-fx-border-width: 2px;" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 18px;" +
+                "-fx-background-radius: 25;" +
+                "-fx-border-radius: 25;" +
+                "-fx-cursor: hand;"
+            );
+        });
+        
+        createGroupBtn.setOnMouseExited(e -> {
+            createGroupBtn.setStyle(
+                "-fx-background-color: transparent;" +
+                "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+                "-fx-border-width: 2px;" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 18px;" +
+                "-fx-background-radius: 25;" +
+                "-fx-border-radius: 25;"
+            );
+        });
+        
+        createGroupBtn.setOnAction(e -> primaryStage.setScene(CreateGroupPage.getScene(primaryStage, fairFundManager)));
+
+        joinGroupContent.getChildren().addAll(joinGroupTitle, descriptionText, inputBox, orSeparator, createGroupBtn);
+        joinGroupPanel.getChildren().add(joinGroupContent);
         
