@@ -146,3 +146,60 @@ public class OverviewPage {
         balanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asString("%.2f"));
         balanceColumn.setMinWidth(200); // Increased width
         balanceColumn.setStyle("-fx-font-size: 18px; -fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;");
+
+
+        
+        // Add custom cell factory for balance column to style positive/negative values
+        balanceColumn.setCellFactory(column -> {
+            return new TableCell<Member, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("-fx-font-size: 18px;");
+                    } else {
+                        setText(item);
+                        // Style based on positive/negative values using ColorManager
+                        double value = Double.parseDouble(item);
+                        if (value > 0) {
+                            setStyle("-fx-font-size: 18px; -fx-text-fill: " + 
+                                    ColorManager.toRgbString(ColorManager.SUCCESS_COLOR) + 
+                                    "; -fx-font-weight: bold;");
+                        } else if (value < 0) {
+                            setStyle("-fx-font-size: 18px; -fx-text-fill: " + 
+                                    ColorManager.toRgbString(ColorManager.ERROR_COLOR) + 
+                                    "; -fx-font-weight: bold;");
+                        } else {
+                            setStyle("-fx-font-size: 18px; -fx-text-fill: " + 
+                                    ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + 
+                                    "; -fx-font-weight: bold;");
+                        }
+                        setAlignment(Pos.CENTER_RIGHT);
+                    }
+                }
+            };
+        });
+
+        // Enhanced zebra striping + hover effect with ColorManager
+        table.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(Member item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    int index = getIndex();
+                    // Luxury alternating colors
+                    setStyle(index % 2 == 0 
+                        ? "-fx-background-color: linear-gradient(to right, " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ", " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + 
+                          "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";"
+                        : "-fx-background-color: linear-gradient(to right, " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + ", " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                          "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";");
+                } else {
+                    setStyle("");
+                }
