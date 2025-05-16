@@ -272,3 +272,37 @@ public class JoinGroupPage {
         });
         
         inputBox.getChildren().addAll(groupIdField, joinGroupBtn);
+
+
+        // Or separator
+        HBox orSeparator = new HBox();
+        orSeparator.setAlignment(Pos.CENTER);
+        
+        Line leftLine = new Line(0, 0, 100, 0);
+        leftLine.setStroke(ColorManager.TEXT_COLOR);
+        leftLine.setOpacity(0.5);
+        
+        Text orText = new Text(" OR ");
+        orText.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        orText.setFill(ColorManager.TEXT_COLOR);
+        orText.setOpacity(0.7);
+        
+        Line rightLine = new Line(0, 0, 100, 0);
+        rightLine.setStroke(ColorManager.TEXT_COLOR);
+        rightLine.setOpacity(0.5);
+        
+        orSeparator.getChildren().addAll(leftLine, orText, rightLine);
+        
+        Button createGroupBtn = new Button("Create New Group");
+        createGroupBtn.setPrefWidth(300);
+        createGroupBtn.setPrefHeight(50);
+        createGroupBtn.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+            "-fx-border-width: 2px;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 18px;" +
+            "-fx-background-radius: 25;" +
+            "-fx-border-radius: 25;"
+        );
+        
