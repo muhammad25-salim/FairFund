@@ -337,4 +337,27 @@ public class JoinGroupPage {
 
         joinGroupContent.getChildren().addAll(joinGroupTitle, descriptionText, inputBox, orSeparator, createGroupBtn);
         joinGroupPanel.getChildren().add(joinGroupContent);
+         
+
+         // Main layout
+        HBox mainContent = new HBox(20);
+        mainContent.setAlignment(Pos.CENTER);
+        mainContent.getChildren().addAll(userGroupsPanel, joinGroupPanel);
         
+        // Set the top and center of the BorderPane
+        mainLayout.setTop(topLayout);
+        mainLayout.setCenter(mainContent);
+
+        return new Scene(mainLayout, 1200, 800);
+    }
+
+    private static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}
+
+    
