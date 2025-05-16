@@ -1,12 +1,21 @@
 package project.controllers;
 
+import java.lang.reflect.Member;
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import project.models.*;
+import project.utils.ColorManager;
+
 
 
 public class EditExpensePage {
@@ -14,51 +23,92 @@ public class EditExpensePage {
     public static Scene getScene(Stage primaryStage, FairFundManager FairFundManager, String groupId, Expense expense) {
         Group group = FairFundManager.getGroup(groupId);
         
-        // Back Button 
+        // UI Elements with matching style
         Button backBtn = new Button("«");
-        backBtn.setOnAction(e -> primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId)));
-
-        // Save Button 
         Button saveBtn = new Button("Save");
         
+        // Title Text - Enhanced to match NewExpensePage
+        Text titleText = new Text("Edit Expense");
+        titleText.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        titleText.setFill(ColorManager.TEXT_COLOR);
 
-        // Title Field 
+        // Enhanced input field to match NewExpensePage
         TextField titleField = new TextField(expense.getTitle());
-        titleField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0;");
+        titleField.setPrefHeight(35);
+        titleField.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.15) + ";" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+            "-fx-text-fill:" + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" + 
+            "-fx-border-width: 0 0 1 0;" +
+            "-fx-prompt-text-fill: " + ColorManager.toRgbaString(ColorManager.WHITE_OPAQUE, 0.7) + ";"
+        );
 
-        // Total Field 
+        // Enhanced amount field to match NewExpensePage
         TextField totalField = new TextField(String.valueOf(expense.getTotalAmount()));
         totalField.setPromptText("Total");
-        totalField.setMaxWidth(100);
+        totalField.setMaxWidth(120);
+        totalField.setPrefHeight(35);
+        totalField.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.15) + ";" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+            "-fx-text-fill:" + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" + 
+            "-fx-border-width: 0 0 1 0;" +
+            "-fx-prompt-text-fill: " + ColorManager.toRgbaString(ColorManager.WHITE_OPAQUE, 0.7) + ";"
+        );
 
+        // Enhanced label styling to match NewExpensePage
         Label iqdLabel = new Label("IQD");
-        iqdLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        iqdLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px; -fx-font-weight: bold;");
 
+        // Use an HBox to position the totalField and iqdLabel side by side
         HBox totalFieldWithLabel = new HBox(5, totalField, iqdLabel);
         totalFieldWithLabel.setAlignment(Pos.CENTER_LEFT);
 
-        // Paid By Dropdown 
+        // Enhanced dropdown styling to match NewExpensePage
         ComboBox<String> paidByDropdown = new ComboBox<>();
-        for (User user : group.getUsers()) {
-            paidByDropdown.getItems().add(user.getName());
+        paidByDropdown.setPrefHeight(35);
+        paidByDropdown.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-background-radius: 5px;"
+        );
+
+        for (Member member : group.getMembers()) {
+            paidByDropdown.getItems().add(member.getName());
         }
         if (expense.getPayer() != null) {
             paidByDropdown.setValue(expense.getPayer().getName());
         }
-        // Horizontal Layout for Total and Paid By
-        HBox totalRow = new HBox(10, totalFieldWithLabel, new Label("paid by"), paidByDropdown);
+
+        // Enhanced label
+        Label paidByLabel = new Label("paid by");
+        paidByLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px;");
+
+        // Replace totalField with totalFieldWithLabel in the totalRow
+        HBox totalRow = new HBox(15, totalFieldWithLabel, paidByLabel, paidByDropdown);
         totalRow.setAlignment(Pos.CENTER_LEFT);
 
-        VBox checkboxes = new VBox(5);
-        for (User user : group.getUsers()) {
-            CheckBox checkBox = new CheckBox(user.getName());
-            if (expense.getParticipants().contains(user)) {
-                checkBox.setSelected(true);
+        // Enhanced section label to match NewExpensePage
+        Label paidForLabel = new Label("paid for");
+        paidForLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px; -fx-font-weight: bold;");
+
+        // Enhanced checkboxes to match NewExpensePage
+        VBox checkboxes = new VBox(8);
+        Map<CheckBox, Member> checkboxMemberMap = new HashMap<>();
+        for (Member member : group.getMembers()) {
+            CheckBox cb = new CheckBox(member.getName());
+            cb.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 14px;");
+            if (expense.getParticipants().contains(member)) {
+                cb.setSelected(true);
             }
-            checkboxes.getChildren().add(checkBox);
+            checkboxMemberMap.put(cb, member);
+            checkboxes.getChildren().add(cb);
         }
 
+        // Enhanced "Select All" checkbox to match NewExpensePage
         CheckBox selectAllCheckbox = new CheckBox("Select All");
+        selectAllCheckbox.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 14px; -fx-font-weight: bold;");
         selectAllCheckbox.setOnAction(e -> {
             boolean isSelected = selectAllCheckbox.isSelected();
             for (javafx.scene.Node node : checkboxes.getChildren()) {
@@ -68,124 +118,199 @@ public class EditExpensePage {
             }
         });
 
-        VBox checkboxesContainer = new VBox(10, selectAllCheckbox, checkboxes);
+        // Enhanced checkbox container with subtle border to match NewExpensePage
+        VBox checkboxesContainer = new VBox(12, selectAllCheckbox, checkboxes);
+        checkboxesContainer.setStyle(
+            "-fx-border-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-border-width: 1px;" +
+            "-fx-border-radius: 8px;" +
+            "-fx-padding: 10px;"
+        );
 
         saveBtn.setOnAction(e -> {
             try {
+                // Validate the inputs first
                 if (titleField.getText().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initOwner(primaryStage);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("You should name the Expense!");
-                    alert.showAndWait();
+                    showAlert("Error", "You should name the Expense!");
                     return;
                 }
-
+        
                 double newAmount;
                 try {
                     newAmount = Double.parseDouble(totalField.getText());
                     if (newAmount <= 0) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.initOwner(primaryStage);
-                        alert.setTitle("Invalid Amount");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Amount must be positive");
-                        alert.showAndWait();
+                        showAlert("Invalid Amount", "Amount must be positive");
                         return;
                     }
                 } catch (NumberFormatException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initOwner(primaryStage);
-                    alert.setTitle("Invalid Input");
-                    alert.setHeaderText(null);
-                    alert.setContentText("The total should be a number!");
-                    alert.showAndWait();
+                    showAlert("Invalid Input", "The total should be a number!");
                     return;
                 }
-
-                User newPayer = group.getUserByName(paidByDropdown.getValue());
+        
+                Member newPayer = group.getMemberByName(paidByDropdown.getValue());
                 if (newPayer == null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initOwner(primaryStage);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Selected payer not found in group");
-                    alert.showAndWait();
+                    showAlert("Error", "Selected payer not found in group");
                     return;
                 }
-
+        
                 // Update the expense object with new values
                 expense.setTitle(titleField.getText());
                 expense.setTotalAmount(newAmount);
                 expense.setPayer(newPayer);
-
+        
                 // Update participants list
                 expense.getParticipants().clear();
-                for (javafx.scene.Node node : checkboxes.getChildren()) {
-                    if (node instanceof CheckBox cb && cb.isSelected()) {
-                        User participant = group.getUserByName(cb.getText());
-                        if (participant != null) {
-                            expense.getParticipants().add(participant);
-                        }
+                for (Map.Entry<CheckBox, Member> entry : checkboxMemberMap.entrySet()) {
+                    if (entry.getKey().isSelected()) {
+                        expense.getParticipants().add(entry.getValue());
                     }
                 }
-
+        
                 if (expense.getParticipants().isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.initOwner(primaryStage);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("At least one participant must be selected!");
-                    alert.showAndWait();
+                    showAlert("Error", "At least one participant must be selected!");
                     return;
                 }
-
-                // call the method to update the expense in memory and database
-                System.out.println("Calling updateExpenseInGroup...");
-                FairFundManager.updateExpenseInGroup(groupId, expense, expense); // Update method call
         
-                // Go back to the Expenses page
-                primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId));
+                // call the method to update the expense in memory and database
+                FairFundManager.updateExpenseInGroup(groupId, expense, expense);
+        
+                // Close the popup window
+                Stage popupStage = (Stage) saveBtn.getScene().getWindow();
+                popupStage.close();
 
+                // Refresh the ExpensesPage in the parent window
+                ExpensesPage.refreshExpensesPage(primaryStage, FairFundManager, groupId);
+        
             } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.initOwner(primaryStage);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText(ex.getMessage());
-                alert.showAndWait();
+                showAlert("Error", ex.getMessage());
             }
         });
 
-        // Blue Rounded Box
-        VBox blueBox = new VBox(10, titleField, totalRow, new Label("paid for"), checkboxesContainer);
-        blueBox.setPadding(new Insets(20));
+         // Enhanced content box with spacing 
+        VBox blueBox = new VBox(20);
+        blueBox.getChildren().addAll(
+            titleText, 
+            titleField, 
+            new Separator(), // visual separator  
+            totalRow, 
+            new Separator(), // visual separator 
+            paidForLabel, 
+            checkboxesContainer
+        );
+        blueBox.setPadding(new Insets(30));
         blueBox.setAlignment(Pos.TOP_LEFT);
-        blueBox.setStyle("-fx-background-color: #3498db; -fx-background-radius: 20;");
+        
+        // Enhanced background with gradient 
+        blueBox.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", " + 
+            "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -15%));" + 
+            "-fx-background-radius: 20px;"
+        );
 
         StackPane stackPane = new StackPane(blueBox);
-        StackPane.setMargin(blueBox, new Insets(50));
+        StackPane.setMargin(blueBox, new Insets(20));
 
-        backBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;");
-        backBtn.setOnMouseEntered(e -> backBtn.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
-        backBtn.setOnMouseExited(e -> backBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+        // Button styling to match NewExpensePage
+        styleButtons(backBtn, saveBtn);
 
-        saveBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;");
-        saveBtn.setOnMouseEntered(e -> saveBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
-        saveBtn.setOnMouseExited(e -> saveBtn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 20; -fx-padding: 6 20 6 20;"));
+        backBtn.setOnAction(e -> {
+            // Close the modal
+            Stage popupStage = (Stage) backBtn.getScene().getWindow();
+            popupStage.close();
+            
+            // After going back, refresh the ExpensesPage in the main window
+            ExpensesPage.refreshExpensesPage(primaryStage, FairFundManager, groupId);
+        });
 
+        // Button box with spacer to match NewExpensePage
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         HBox buttonsBox = new HBox(10, backBtn, spacer, saveBtn);
         buttonsBox.setPadding(new Insets(10));
         buttonsBox.setAlignment(Pos.CENTER);
 
+        // Root layout with subtle background to match NewExpensePage
         BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ";");
         root.setPadding(new Insets(20));
         root.setTop(buttonsBox);
         root.setCenter(stackPane);
 
-        return new Scene(root, 600, 400);
+        return new Scene(root, 700, 600);
+    }
+
+    // Added styleButtons method to match NewExpensePage
+    private static void styleButtons(Button backBtn, Button saveBtn) {
+        backBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) +";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        saveBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BUTTON_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        backBtn.setOnMouseEntered(e -> backBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.PRIMARY_HOVER_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;" +
+                "-fx-cursor: hand;"
+        ));
+
+        saveBtn.setOnMouseEntered(e -> saveBtn.setStyle(
+                "-fx-background-color:" + ColorManager.toRgbString(ColorManager.BUTTON_HOVER_COLOR) +";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;" +
+                "-fx-cursor: hand;"
+        ));
+
+        backBtn.setOnMouseExited(e -> backBtn.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) +";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+            "-fx-font-size: 14px;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 6 20 6 20;"
+        ));
+
+        saveBtn.setOnMouseExited(e -> saveBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BUTTON_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        ));
+    }
+
+    // Added showAlert method to match NewExpensePage
+    private static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        
+        // Style the alert dialog
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", " + 
+            "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -20%));" +
+            "-fx-border-radius: 5px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 10, 0, 0, 3);"
+        );
+        dialogPane.lookup(".content.label").setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 14px;");
+        
+        alert.showAndWait();
     }
 }
