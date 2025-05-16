@@ -126,9 +126,8 @@ public class JoinGroupPage {
                         
                         setText(null);
                         setGraphic(cellBox);
-
                         
-                      // Add hover effect
+                        // Add hover effect
                         setOnMouseEntered(e -> {
                             cellBox.setStyle("-fx-background-color: " + 
                                            ColorManager.toRgbString(ColorManager.HOVER_BLUE_START) + 
@@ -169,8 +168,8 @@ public class JoinGroupPage {
                     }
                 }
             });
-
-              // Add a hint text
+            
+            // Add a hint text
             Label hintLabel = new Label("Double-click to open a group");
             hintLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + 
                              ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + "; -fx-font-style: italic;");
@@ -231,8 +230,8 @@ public class JoinGroupPage {
             "-fx-background-radius: 30;" +
             "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 5, 0, 0, 1);"
         );
-
-         // Add hover effects
+        
+        // Add hover effects
         joinGroupBtn.setOnMouseEntered(e -> {
             joinGroupBtn.setStyle(
                 "-fx-background-color: derive(" + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ", -10%);" +
@@ -273,7 +272,6 @@ public class JoinGroupPage {
         
         inputBox.getChildren().addAll(groupIdField, joinGroupBtn);
 
-
         // Or separator
         HBox orSeparator = new HBox();
         orSeparator.setAlignment(Pos.CENTER);
@@ -305,8 +303,7 @@ public class JoinGroupPage {
             "-fx-background-radius: 25;" +
             "-fx-border-radius: 25;"
         );
-
-          
+        
         // Add hover effects
         createGroupBtn.setOnMouseEntered(e -> {
             createGroupBtn.setStyle(
@@ -337,9 +334,8 @@ public class JoinGroupPage {
 
         joinGroupContent.getChildren().addAll(joinGroupTitle, descriptionText, inputBox, orSeparator, createGroupBtn);
         joinGroupPanel.getChildren().add(joinGroupContent);
-         
 
-         // Main layout
+        // Main layout
         HBox mainContent = new HBox(20);
         mainContent.setAlignment(Pos.CENTER);
         mainContent.getChildren().addAll(userGroupsPanel, joinGroupPanel);
@@ -359,5 +355,3 @@ public class JoinGroupPage {
         alert.showAndWait();
     }
 }
-
-    
