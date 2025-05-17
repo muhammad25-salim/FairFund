@@ -193,5 +193,26 @@ public class PaymentPage {
 
         return new Scene(root, 700, 600);
     }
+
+    // Updated showAlert method to use ColorManager
+    private static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        
+        // Style the alert dialog to match NewExpensePage
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", " + 
+            "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -20%));" +
+            "-fx-border-radius: 5px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 10, 0, 0, 3);"
+        );
+        dialogPane.lookup(".content.label").setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 14px;");
+        
+        alert.showAndWait();
     }
-}
+    }
+    
