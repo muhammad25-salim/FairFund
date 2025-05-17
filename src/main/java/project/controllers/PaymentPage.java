@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import project.models.*;
 import project.utils.ColorManager;
 
+import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,5 +40,50 @@ public class PaymentPage {
             "-fx-border-width: 0 0 1 0;" +
             "-fx-prompt-text-fill: " + ColorManager.toRgbaString(ColorManager.WHITE_OPAQUE, 0.7) + ";"
         );
+        
+         // Enhanced label styling to match NewExpensePage
+        Label iqdLabel = new Label("IQD");
+        iqdLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px; -fx-font-weight: bold;");
+
+        HBox amountFieldWithLabel = new HBox(8, amountField, iqdLabel);
+        amountFieldWithLabel.setAlignment(Pos.CENTER_LEFT);
+
+        // Enhanced labels for dropdowns to match NewExpensePage
+        Label fromLabel = new Label("From");
+        fromLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px; -fx-font-weight: bold;");
+
+        Label toLabel = new Label("To");
+        toLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px; -fx-font-weight: bold;");
+
+        // Enhanced dropdown styling to match NewExpensePage
+        ComboBox<String> fromDropdown = new ComboBox<>();
+        fromDropdown.setPrefHeight(35);
+        fromDropdown.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-background-radius: 5px;"
+        );
+
+        ComboBox<String> toDropdown = new ComboBox<>();
+        toDropdown.setPrefHeight(35);
+        toDropdown.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-background-radius: 5px;"
+        );
+
+        List<Member> groupMembers = fairFundManager.getGroup(groupId).getMembers();
+        for (Member member : groupMembers) {
+            fromDropdown.getItems().add(member.getName());
+            toDropdown.getItems().add(member.getName());
+        }
+        if (!groupMembers.isEmpty()) {
+            fromDropdown.setValue(groupMembers.get(0).getName());
+            if (groupMembers.size() > 1) {
+                toDropdown.setValue(groupMembers.get(1).getName());
+            }
+        }
     }
 }
