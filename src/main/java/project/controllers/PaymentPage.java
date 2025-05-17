@@ -169,5 +169,29 @@ public class PaymentPage {
             Stage popupStage = (Stage) backBtn.getScene().getWindow();
             popupStage.close();
         });
+
+        // Style Buttons to match NewExpensePage
+        styleButtons(backBtn, payBtn);
+
+        // Button box with spacer to match NewExpensePage
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox buttonsBox = new HBox(10, backBtn, spacer, payBtn);
+        buttonsBox.setPadding(new Insets(10));
+        buttonsBox.setAlignment(Pos.CENTER);
+
+        // Use stack pane for consistent layout with NewExpensePage
+        StackPane stackPane = new StackPane(fieldsLayout);
+        StackPane.setMargin(fieldsLayout, new Insets(20));
+
+        // Root layout with subtle background to match NewExpensePage
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ";");
+        root.setPadding(new Insets(20));
+        root.setTop(buttonsBox);
+        root.setCenter(stackPane);
+
+        return new Scene(root, 700, 600);
+    }
     }
 }
