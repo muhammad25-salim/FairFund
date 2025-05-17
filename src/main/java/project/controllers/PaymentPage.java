@@ -40,7 +40,7 @@ public class PaymentPage {
             "-fx-border-width: 0 0 1 0;" +
             "-fx-prompt-text-fill: " + ColorManager.toRgbaString(ColorManager.WHITE_OPAQUE, 0.7) + ";"
         );
-        
+
          // Enhanced label styling to match NewExpensePage
         Label iqdLabel = new Label("IQD");
         iqdLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px; -fx-font-weight: bold;");
@@ -85,5 +85,51 @@ public class PaymentPage {
                 toDropdown.setValue(groupMembers.get(1).getName());
             }
         }
+
+         // Enhanced date label to match NewExpensePage
+        Label dateLabel = new Label("Date");
+        dateLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 15px; -fx-font-weight: bold;");
+
+        // Enhanced date picker styling
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+        datePicker.setPrefHeight(35);
+        datePicker.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-background-radius: 5px;"
+        );
+
+        // Create organized layout with spacing to match NewExpensePage
+        VBox amountBox = new VBox(8, amountFieldWithLabel);
+        
+        VBox fromBox = new VBox(8, fromLabel, fromDropdown);
+        
+        VBox toBox = new VBox(8, toLabel, toDropdown);
+        
+        VBox dateBox = new VBox(8, dateLabel, datePicker);
+
+        // Enhanced layout organization
+        VBox fieldsLayout = new VBox(20);
+        fieldsLayout.getChildren().addAll(
+            titleText,
+            amountBox,
+            new Separator(), // visual separator to match NewExpensePage
+            fromBox,
+            toBox,
+            new Separator(), // visual separator to match NewExpensePage
+            dateBox
+        );
+        
+        fieldsLayout.setPadding(new Insets(30));
+        fieldsLayout.setAlignment(Pos.TOP_LEFT);
+        
+        // Enhanced background with gradient to match NewExpensePage
+        fieldsLayout.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", " + 
+            "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -15%));" + 
+            "-fx-background-radius: 20px;"
+        );
     }
 }
