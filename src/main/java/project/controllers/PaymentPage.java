@@ -214,5 +214,57 @@ public class PaymentPage {
         
         alert.showAndWait();
     }
+
+     // Updated styleButtons method to use ColorManager
+    private static void styleButtons(Button backBtn, Button payBtn) {
+        backBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) +";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        payBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BUTTON_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        );
+
+        backBtn.setOnMouseEntered(e -> backBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.PRIMARY_HOVER_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;" +
+                "-fx-cursor: hand;"
+        ));
+
+        payBtn.setOnMouseEntered(e -> payBtn.setStyle(
+                "-fx-background-color:" + ColorManager.toRgbString(ColorManager.BUTTON_HOVER_COLOR) +";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;" +
+                "-fx-cursor: hand;"
+        ));
+
+        backBtn.setOnMouseExited(e -> backBtn.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) +";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+            "-fx-font-size: 14px;" +
+            "-fx-background-radius: 20;" +
+            "-fx-padding: 6 20 6 20;"
+        ));
+
+        payBtn.setOnMouseExited(e -> payBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BUTTON_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 20;" +
+                "-fx-padding: 6 20 6 20;"
+        ));
     }
-    
+}
