@@ -131,5 +131,43 @@ public class PaymentPage {
             "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -15%));" + 
             "-fx-background-radius: 20px;"
         );
+
+         // Save Button Logic remains the same but with enhanced alert to match NewExpensePage
+        payBtn.setOnAction(e -> {
+            String from = fromDropdown.getValue();
+            String to = toDropdown.getValue();
+            String amountText = amountField.getText();
+            LocalDate date = datePicker.getValue();
+
+            if (from == null || to == null || from.equals(to)) {
+                showAlert("Error", "Please select valid 'From' and 'To' members.");
+                return;
+            }
+
+            double amount;
+            try {
+                amount = Double.parseDouble(amountText);
+                if (amount <= 0) {
+                    showAlert("Invalid Amount", "The payment amount must be greater than zero.");
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                showAlert("Invalid Input", "Please enter a valid number for the payment amount.");
+                return;
+            }
+
+            // Perform calculations and save payment
+            fairFundManager.addPaymentToGroup(groupId, amount, from, to, date);
+
+            // Close the popup
+            Stage popupStage = (Stage) payBtn.getScene().getWindow();
+            popupStage.close();
+        });
+
+        // Back Button Logic
+        backBtn.setOnAction(e -> {
+            Stage popupStage = (Stage) backBtn.getScene().getWindow();
+            popupStage.close();
+        });
     }
 }
