@@ -126,62 +126,132 @@ public class ExpensesPage {
         topBar.setPadding(new Insets(30, 30, 20, 30));
         topBar.setAlignment(Pos.CENTER);
 
-        TableView<Expense> table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        // Table setup
+        table = new TableView<>();  // Initialize the TableView here
+        table.setId("expenseTable"); // Set the ID for the TableView
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        table.setStyle("-fx-font-size: 18px; -fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_OPAQUE, 0.9) + 
+                       "; -fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + 
+                       ", 10, 0, 0, 2); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-padding: 5px;");
+
+        // Increase row height
+        table.setFixedCellSize(50);
 
         TableColumn<Expense, String> descriptionColumn = new TableColumn<>("Description");
-        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty()); 
+        descriptionColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
+        descriptionColumn.setMinWidth(300); // Increased width
+        descriptionColumn.setStyle("-fx-font-size: 18px; -fx-alignment: CENTER-LEFT; -fx-font-weight: bold;");
 
         TableColumn<Expense, String> amountColumn = new TableColumn<>("Amount");
         amountColumn.setCellValueFactory(cellData -> 
-        new SimpleStringProperty(cellData.getValue().totalAmountProperty().get() + " IQD")
+            new SimpleStringProperty(String.format("%.2f IQD", cellData.getValue().totalAmountProperty().get()))
         );
+        amountColumn.setMinWidth(200); // Increased width
+        amountColumn.setStyle("-fx-font-size: 18px; -fx-alignment: CENTER-LEFT; -fx-font-weight: bold;");
+        
+        // Right-align the amount values
+        amountColumn.setCellFactory(column -> {
+            return new TableCell<Expense, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("-fx-font-size: 18px;");
+                    } else {
+                        setText(item);
+                        setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+                        setAlignment(Pos.CENTER_RIGHT);
+                    }
+                }
+            };
+        });
 
         TableColumn<Expense, String> payerColumn = new TableColumn<>("Payer");
         payerColumn.setCellValueFactory(cellData -> {
-            User payer = cellData.getValue().getPayer(); 
-            return new SimpleStringProperty(payer.getName()); 
+            Member payer = cellData.getValue().getPayer();
+            return new SimpleStringProperty(payer.getName());
         });
+        payerColumn.setMinWidth(250); // Increased width
+        payerColumn.setStyle("-fx-font-size: 18px; -fx-alignment: CENTER-LEFT; -fx-font-weight: bold;");
 
         table.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !table.getSelectionModel().isEmpty()) {
                 Expense selectedExpense = table.getSelectionModel().getSelectedItem();
-                primaryStage.setScene(EditExpensePage.getScene(primaryStage, FairFundManager, groupId, selectedExpense));
+
+                // Check if the current user is the creator of the expense
+                if (!selectedExpense.getCreator().equals(FairFundManager.getCurrentUser().getUsername())) {
+                    showAlert("Permission Denied", "Only the creator of the expense can edit it.");
+                    return;
+                }
+
+                // Create a new Stage for the popup
+                Stage popup = new Stage();
+                popup.setTitle("Edit Expense");
+
+                // Set the scene of the popup
+                popup.setScene(EditExpensePage.getScene(popup, FairFundManager, groupId, selectedExpense));
+
+                // Set the modal behavior
+                popup.initOwner(primaryStage); // makes the popup dependent on the main stage
+                popup.initModality(Modality.WINDOW_MODAL); // makes it modal
+                popup.show();  // Show the popup window
             }
         });
-        
+
         TableColumn<Expense, Void> deleteColumn = new TableColumn<>("Action");
         deleteColumn.setCellFactory(param -> new TableCell<>() {
             private final Button deleteButton = new Button("Delete");
 
             {
-                // Style the delete button
+                // Style the delete button with more luxurious look - matching other buttons
                 deleteButton.setStyle(
-                    "-fx-background-color: #e74c3c;" +    // Red background
-                    "-fx-text-fill: white;" +               // White text color
-                    "-fx-font-size: 12px;" +                // Smaller font size
-                    "-fx-font-weight: bold;" +              // Bold font weight
-                    "-fx-padding: 3px 10px;" +              // Smaller padding around text
-                    "-fx-background-radius: 20px;" +        // Slightly rounded corners
-                    "-fx-border-radius: 20px;" +            // Rounded border
-                    "-fx-transition: background-color 0.3s ease-in-out;" // Smooth transition
-                );
-
-                // Button hover effect with the smaller button size
-                deleteButton.setOnMouseEntered(e -> deleteButton.setStyle(
-                    "-fx-background-color: #c0392b;" +  // Darker red for hover
-                    "-fx-text-fill: white;" +
-                    "-fx-font-size: 12px;" +
+                    "-fx-background-color: " + ColorManager.toRgbString(ColorManager.ERROR_COLOR) +";" +
+                    "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                    "-fx-font-size: 14px;" +
                     "-fx-font-weight: bold;" +
-                    "-fx-padding: 3px 10px;" +
+                    "-fx-padding: 6px 14px;" +
                     "-fx-background-radius: 20px;" +
-                    "-fx-border-radius: 20px;"
-                ));
-
+                    "-fx-border-radius: 20px;" +
+                    "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 4, 0, 0, 1);"
+                );
+                
+                // Hover effects
+                deleteButton.setOnMouseEntered(e -> {
+                    deleteButton.setStyle(
+                        "-fx-background-color: derive(" + ColorManager.toRgbString(ColorManager.ERROR_COLOR) + ", -10%);" +
+                        "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 6px 14px;" +
+                        "-fx-background-radius: 20px;" +
+                        "-fx-border-radius: 20px;" +
+                        "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 6, 0, 0, 2);" +
+                        "-fx-cursor: hand;"
+                    );
+                });
+                
+                deleteButton.setOnMouseExited(e -> {
+                    deleteButton.setStyle(
+                        "-fx-background-color: " + ColorManager.toRgbString(ColorManager.ERROR_COLOR) +";" +
+                        "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +";" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 6px 14px;" +
+                        "-fx-background-radius: 20px;" +
+                        "-fx-border-radius: 20px;" +
+                        "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 4, 0, 0, 1);"
+                    );
+                });
+                
                 deleteButton.setOnAction(event -> {
                     Expense expense = getTableView().getItems().get(getIndex());
-                    FairFundManager.removeExpenseFromGroup(groupId, expense); 
-                    primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId)); 
+                    if (!expense.getCreator().equals(FairFundManager.getCurrentUser().getUsername())) {
+                        showAlert("Permission Denied", "Only the creator of the expense can delete it.");
+                        return;
+                    }
+                    FairFundManager.removeExpenseFromGroup(groupId, expense);
+                    primaryStage.setScene(ExpensesPage.getScene(primaryStage, FairFundManager, groupId));
                 });
             }
 
@@ -195,27 +265,47 @@ public class ExpensesPage {
         table.getColumns().addAll(descriptionColumn, amountColumn, payerColumn, deleteColumn);
         table.setItems(FXCollections.observableArrayList(FairFundManager.getGroup(groupId).getExpenses()));
 
-        // Apply striped row styling
+        // Apply luxury striped row styling with gradients - matching OverviewPage
         table.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(Expense item, boolean empty) {
                 super.updateItem(item, empty);
                 if (!empty) {
                     int index = getIndex();
+                    // Luxury alternating colors
                     setStyle(index % 2 == 0 
-                        ? "-fx-background-color: white;" 
-                        : "-fx-background-color: #E0F7FA;");  // Light blue
+                        ? "-fx-background-color: linear-gradient(to right, " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ", " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + 
+                          "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";"
+                        : "-fx-background-color: linear-gradient(to right, " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + ", " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                          "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                          ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";");
                 } else {
                     setStyle("");
                 }
-        
-                setOnMouseEntered(e -> setStyle("-fx-background-color: #B2EBF2;"));  // Hover highlight
+
+                // More elegant hover effect
+                setOnMouseEntered(e -> setStyle("-fx-background-color: linear-gradient(to right, " + 
+                                              ColorManager.toRgbString(ColorManager.HOVER_BLUE_START) + ", " + 
+                                              ColorManager.toRgbString(ColorManager.HOVER_BLUE_END) + "); -fx-cursor: hand;"));
                 setOnMouseExited(e -> {
                     if (!empty) {
                         int index = getIndex();
                         setStyle(index % 2 == 0 
-                            ? "-fx-background-color: white;" 
-                            : "-fx-background-color: #E0F7FA;");
+                            ? "-fx-background-color: linear-gradient(to right, " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ", " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + 
+                              "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";"
+                            : "-fx-background-color: linear-gradient(to right, " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + ", " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                              "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";");
                     } else {
                         setStyle("");
                     }
@@ -223,9 +313,76 @@ public class ExpensesPage {
             }
         });
 
-        VBox layout = new VBox(10, topBar, table);
-        layout.setPadding(new Insets(10));
+        // Add a header styling - matching OverviewPage
+        table.getStyleClass().add("table-view");
 
-        return new Scene(layout, 600, 500);
+        // Add a title above the table
+        Label tableTitle = new Label("Expense Records");
+        tableTitle.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";");
+        tableTitle.setPadding(new Insets(20, 0, 10, 10));
+
+        // Layout with title - matching OverviewPage
+        VBox tableContainer = new VBox(10);
+        tableContainer.getChildren().addAll(tableTitle, table);
+        tableContainer.setPadding(new Insets(10, 20, 20, 20));
+        tableContainer.setStyle("-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_MEDIUM, 0.5) + ";");
+        VBox.setVgrow(table, Priority.ALWAYS);
+
+        // Layout - matching OverviewPage
+        VBox layout = new VBox(10, topBar, tableContainer);
+        layout.setPadding(new Insets(10));
+        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, " + 
+                        ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ", " + 
+                        ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + ");");
+
+        // Return the scene with the layout
+        return new Scene(layout, 1200, 800); // Window size remains the same
+    }
+
+    public static void refreshExpensesPage(Stage primaryStage, FairFundManager fairFundManager, String groupId) {
+        System.out.println("Refreshing ExpensesPage...");
+        
+        // Get the updated list of expenses
+        ObservableList<Expense> updatedExpenses = FXCollections.observableArrayList(fairFundManager.getGroup(groupId).getExpenses());
+
+        // If table is already initialized, update it directly
+        if (table != null) {
+            table.setItems(updatedExpenses);  // Update the TableView with the latest data
+            table.refresh();  // Force a refresh of the TableView
+        } else {
+            System.out.println("Error: TableView not initialized.");
+        }
+    } 
+    
+    private static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private static MenuItem createMenuItem(String text, String iconPath) {
+        MenuItem item = new MenuItem(text);
+        
+        try {
+            // Load icon
+            ImageView icon = new ImageView(new javafx.scene.image.Image(iconPath));
+            icon.setFitWidth(16);
+            icon.setFitHeight(16);
+            item.setGraphic(icon);
+        } catch (Exception ex) {
+            System.out.println("Could not load icon for " + text + ": " + ex.getMessage());
+        }
+        
+        // Style menu item
+        item.setStyle(
+            "-fx-font-size: 14px; " +
+            "-fx-padding: 10px 16px; " +
+            "-fx-font-weight: normal; " +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+        );
+        
+        return item;
     }
 }
