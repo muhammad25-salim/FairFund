@@ -188,5 +188,67 @@ public class SignUpPage {
         );
         
         usernameBox.getChildren().addAll(userIcon, usernameField);
+
+          // Password field with icon
+        HBox passwordBox = new HBox(10);
+        passwordBox.setAlignment(Pos.CENTER_LEFT);
+        passwordBox.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_GRAY_BG) + ";" +
+            "-fx-background-radius: 30px;" +
+            "-fx-padding: 5px 15px;"
+        );
+        
+        ImageView lockIcon = new ImageView();
+        try {
+            Image icon = new Image("file:src/main/resources/Image/lock.png");
+            lockIcon.setImage(icon);
+            lockIcon.setFitHeight(20);
+            lockIcon.setFitWidth(20);
+        } catch (Exception e) {
+            System.out.println("Lock icon not found");
+        }
+        
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Create a password");
+        passwordField.setPrefHeight(40);
+        passwordField.setPrefWidth(300);
+        passwordField.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-font-size: 15px;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+        );
+        
+        passwordBox.getChildren().addAll(lockIcon, passwordField);
+        
+        // Confirm Password field with icon
+        HBox confirmPasswordBox = new HBox(10);
+        confirmPasswordBox.setAlignment(Pos.CENTER_LEFT);
+        confirmPasswordBox.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_GRAY_BG) + ";" +
+            "-fx-background-radius: 30px;" +
+            "-fx-padding: 5px 15px;"
+        );
+        
+        ImageView confirmLockIcon = new ImageView();
+        try {
+            Image icon = new Image("file:src/main/resources/Image/lock.png");
+            confirmLockIcon.setImage(icon);
+            confirmLockIcon.setFitHeight(20);
+            confirmLockIcon.setFitWidth(20);
+        } catch (Exception e) {
+            System.out.println("Lock icon not found");
+        }
+        
+        PasswordField confirmPasswordField = new PasswordField();
+        confirmPasswordField.setPromptText("Confirm your password");
+        confirmPasswordField.setPrefHeight(40);
+        confirmPasswordField.setPrefWidth(300);
+        confirmPasswordField.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-font-size: 15px;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+        );
+        
+        confirmPasswordBox.getChildren().addAll(confirmLockIcon, confirmPasswordField);
     }
 }
