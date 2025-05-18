@@ -250,5 +250,80 @@ public class SignUpPage {
         );
         
         confirmPasswordBox.getChildren().addAll(confirmLockIcon, confirmPasswordField);
+
+        // Signup button with hover effect
+        Button signUpButton = new Button("Create Account");
+        signUpButton.setPrefHeight(50);
+        signUpButton.setPrefWidth(360);
+        signUpButton.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 16px;" +
+            "-fx-background-radius: 30px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 3, 0, 0, 1);"
+        );
+        
+        // Add hover effect
+        signUpButton.setOnMouseEntered(e -> 
+            signUpButton.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.PRIMARY_HOVER_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 16px;" +
+                "-fx-background-radius: 30px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 5, 0, 0, 1);" +
+                "-fx-cursor: hand;"
+            )
+        );
+        
+        signUpButton.setOnMouseExited(e -> 
+            signUpButton.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 16px;" +
+                "-fx-background-radius: 30px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 3, 0, 0, 1);"
+            )
+        );
+        
+        signUpButton.setOnAction(e -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            String confirmPassword = confirmPasswordField.getText();
+
+            if (password.equals(confirmPassword)) {
+                try {
+                    // Initialize the database helper
+                    DatabaseHelper dbHelper = new DatabaseHelper();
+
+                    // Recreate tables to ensure database is initialized
+                    dbHelper.recreateTables();  // Ensure table creation before saving the user
+
+                    // Check if the user already exists
+                    UserEntity existingUser = dbHelper.getUserByUsername(username);
+                    if (existingUser != null) {
+                        showAlert("Username already exists. Please choose a different username.");
+                    } else {
+                        // Create the new user and save it
+                        UserEntity newUser = new UserEntity(username, password);
+                        dbHelper.saveUser(newUser);
+                        System.out.println("User created successfully!");
+                        showSuccessAlert("Account created successfully!");
+
+                        // Redirect to LoginPage after successful sign-up
+                        primaryStage.setScene(LoginPage.getScene(primaryStage));
+                    }
+                    dbHelper.close();  // Close the database connection
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    showAlert("Error creating account: " + ex.getMessage());
+                }
+            } else {
+                showAlert("Passwords do not match.");
+            }
+        });
+
     }
 }
