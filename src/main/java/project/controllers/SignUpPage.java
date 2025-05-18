@@ -112,5 +112,50 @@ public class SignUpPage {
             "-fx-background-radius: 15px;" +
             "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.1) + ", 20, 0, 0, 0);"
         );
+
+        // Form title
+        Text formTitle = new Text("Create Account");
+        formTitle.setFont(Font.font("Arial", FontWeight.BOLD, 32));
+        formTitle.setFill(ColorManager.DARK_GRAY);
+        
+        // Tab-like buttons for Login/Signup
+        HBox tabButtons = new HBox();
+        tabButtons.setAlignment(Pos.CENTER);
+        tabButtons.setSpacing(0);
+        tabButtons.setMaxWidth(360);
+        tabButtons.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_GRAY_BG) + ";" + 
+            "-fx-background-radius: 30px;" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BORDER_COLOR) + ";" +
+            "-fx-border-radius: 30px;"
+        );
+        
+        Button loginTab = new Button("Login");
+        loginTab.setPrefWidth(180);
+        loginTab.setPrefHeight(50);
+        loginTab.setStyle(
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + ";" +
+            "-fx-font-size: 16px;" +
+            "-fx-background-radius: 30px 0px 0px 30px;" +
+            "-fx-font-weight: bold;"
+        );
+        
+        loginTab.setOnAction(e -> {
+            primaryStage.setScene(LoginPage.getScene(primaryStage)); // Navigate to LoginPage
+        });
+        
+        Button signupTab = new Button("Sign Up");
+        signupTab.setPrefWidth(180);
+        signupTab.setPrefHeight(50);
+        signupTab.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 16px;" +
+            "-fx-background-radius: 0px 30px 30px 0px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 3, 0, 0, 1);"
+        );
+        
+        tabButtons.getChildren().addAll(loginTab, signupTab);
     }
 }
