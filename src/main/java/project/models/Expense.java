@@ -12,6 +12,7 @@ public class Expense {
     private User payer; 
     private List<User> participants; 
     private int id;
+    private String creator;
 
     public Expense(int id ,String title, double totalAmount, User payer, List<User> participants) {
         this.title = new SimpleStringProperty(title);
@@ -62,6 +63,14 @@ public class Expense {
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount.set(totalAmount);
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public void calculateBalances() {

@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.CubicCurveTo;
+import project.utils.ColorManager;
 
 
 public class MainPage extends Application {
@@ -30,8 +31,20 @@ public class MainPage extends Application {
         this.primaryStage = primaryStage;
 
         BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: white;");
+        root.setStyle("-fx-background-color: "  + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";");
 
+        Text logoutText = new Text("Log out");
+        logoutText.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        logoutText.setFill(Color.BLACK);
+        logoutText.setOnMouseClicked(e -> logout());
+        logoutText.setOnMouseEntered(e -> logoutText.setUnderline(true));
+        logoutText.setOnMouseExited(e -> logoutText.setUnderline(false));
+        logoutText.setCursor(javafx.scene.Cursor.HAND);
+        
+        StackPane logoutPane = new StackPane(logoutText);
+        logoutPane.setAlignment(Pos.TOP_LEFT);
+        logoutPane.setPadding(new Insets(20, 0, 0, 20));
+        root.setTop(logoutPane);
 
         Path customShape = new Path();
         customShape.getElements().addAll(
@@ -45,15 +58,15 @@ public class MainPage extends Application {
             new CubicCurveTo(-45.9, -76.4, -22.9, -84, -1.3, -82.7),
             new CubicCurveTo(20.3, -81.4, 40.6, -71.1, 56.5, -55.9)
         );
-        customShape.setFill(Color.web("#238BFA"));
+        customShape.setFill(Color.web(ColorManager.toRgbString(ColorManager.getPrimaryColor())));
         customShape.setStroke(null); 
 
         
-        customShape.setScaleX(5.0); 
-        customShape.setScaleY(5.0);
+        customShape.setScaleX(7.0); 
+        customShape.setScaleY(7.0);
 
-        customShape.setTranslateX(-100);
-        customShape.setTranslateY(-100); 
+        customShape.setTranslateX(-30);
+        customShape.setTranslateY(-140); 
 
 
         StackPane bluePart = new StackPane();
@@ -65,7 +78,7 @@ public class MainPage extends Application {
         try {
             Image image = new Image("file:src/main/resources/Image/Welcome_image.png");
             imageView = new ImageView(image);
-            imageView.setFitWidth(300);
+            imageView.setFitWidth(430);
             imageView.setPreserveRatio(true);
         } catch (IllegalArgumentException e) {
             System.err.println("Error: Unable to load the image. Please check the file path.");
@@ -73,21 +86,22 @@ public class MainPage extends Application {
         }
 
         Text tagline = new Text("Split expenses effortlessly and keep\n track of shared costs with ease");
-        tagline.setFill(javafx.scene.paint.Color.WHITE);
+        tagline.setFill(Color.web(ColorManager.toRgbString(ColorManager.TEXT_COLOR)));
         tagline.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
-        tagline.setWrappingWidth(280);
+        tagline.setWrappingWidth(360);
         tagline.setTextAlignment(TextAlignment.CENTER); 
 
+        leftSide.setPadding(new Insets(20, 20, 0, 60));
         leftSide.getChildren().addAll(imageView, tagline);
         bluePart.getChildren().addAll(customShape, leftSide);
+        VBox.setMargin(imageView, new Insets(0, 0, 0, 60));
 
-       
         VBox rightSide = new VBox(20);
         rightSide.setAlignment(Pos.CENTER);
         rightSide.setPadding(new Insets(50));
 
         Text title = new Text("FAIR FUND");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 37));
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 50));
         title.setFill(Color.web("#238BFA"));
 
        
@@ -95,31 +109,31 @@ public class MainPage extends Application {
 
         Text subTitle = new Text("Fair, Fast, Transparent");
         subTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
-        subTitle.setFill(Color.web("#000000")); 
+        subTitle.setFill(Color.web(ColorManager.toRgbString(ColorManager.getPrimaryColor()))); 
 
        
-        VBox.setMargin(subTitle, new Insets(-10, 0, 0, 110));
+        VBox.setMargin(subTitle, new Insets(-10, 0, 140, 250));
 
         
 
 
         Button createGroupBtn = new Button("Create group");
         createGroupBtn.setStyle(
-                "-fx-background-color: #238BFA; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        createGroupBtn.setPrefWidth(180); 
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + "; -fx-font-size: 21px; -fx-padding: 10px 20px;");
+        createGroupBtn.setPrefWidth(270); 
         createGroupBtn.setOnAction(e -> openCreateGroup()); 
 
         Button joinGroupBtn = new Button("Join an existing group");
         joinGroupBtn.setStyle(
-                "-fx-background-color: transparent; -fx-border-color: #238BFA; -fx-text-fill: #238BFA; -fx-font-size: 14px; -fx-padding: 10px 20px;");
-        joinGroupBtn.setPrefWidth(180); 
+                "-fx-background-color: transparent; -fx-border-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-font-size: 19px; -fx-padding: 10px 20px;");
+        joinGroupBtn.setPrefWidth(270); 
         joinGroupBtn.setOnAction(e -> openJoinGroup()); 
 
 
     
         VBox buttonBox = new VBox(10); 
         buttonBox.setAlignment(Pos.BOTTOM_RIGHT); 
-        buttonBox.setPadding(new Insets(90, 0, 150, 0)); 
+        buttonBox.setPadding(new Insets(160, 30, 40, 0)); 
     
         buttonBox.getChildren().addAll(createGroupBtn, joinGroupBtn);
 
@@ -131,7 +145,7 @@ public class MainPage extends Application {
         root.setCenter(rightSide);
 
         
-        Scene scene = new Scene(root, 800, 500);
+        Scene scene = new Scene(root, 1200, 800);
         primaryStage.setTitle("FairFund - Expense Sharing");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -145,10 +159,9 @@ public class MainPage extends Application {
         primaryStage.setScene(JoinGroupPage.getScene(primaryStage, FairFundManager));
     }
 
-    public static void launchGUI(FairFundManager FairFundManager) {
-        MainPage mainPage = new MainPage(FairFundManager);
-        mainPage.start(new Stage());
-
+    private void logout() {
+        // Implement the logout functionality here
+        System.out.println("Logged out");
     }
 }
 
