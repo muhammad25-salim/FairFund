@@ -265,5 +265,111 @@ public class LoginPage extends Application {
             "-fx-font-weight: bold;" +
             "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 3, 0, 0, 1);"
         );
+
+         // Add hover effect
+        loginButton.setOnMouseEntered(e -> 
+            loginButton.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.PRIMARY_HOVER_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 16px;" +
+                "-fx-background-radius: 30px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 5, 0, 0, 1);" +
+                "-fx-cursor: hand;"
+            )
+        );
+        
+        loginButton.setOnMouseExited(e -> 
+            loginButton.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 16px;" +
+                "-fx-background-radius: 30px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 3, 0, 0, 1);"
+            )
+        );
+        
+        loginButton.setOnAction(e -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+
+            try {
+                DatabaseHelper dbHelper = new DatabaseHelper();
+                UserEntity user = dbHelper.getUserByUsername(username);
+
+                if (user != null && user.getPassword().equals(password)) {
+                    // Initialize the FairFundManager
+                    FairFundManager fairFundManager = new FairFundManager();
+
+                    // Set the currentUser in FairFundManager
+                    fairFundManager.setCurrentUser(user);
+
+                    // Switch to MainPage and pass the FairFundManager
+                    MainPage mainPage = new MainPage(fairFundManager);
+                    mainPage.start(primaryStage);
+                } else {
+                    showAlert("Invalid username or password");
+                }
+            } catch (SQLException ex) {
+                showAlert("Error during login");
+            }
+        });
+
+        // Not a member? Sign up link
+        HBox signupLinkBox = new HBox();
+        signupLinkBox.setAlignment(Pos.CENTER);
+        Label notMemberLabel = new Label("Not a member? ");
+        notMemberLabel.setStyle(
+            "-fx-font-size: 15px; " +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + ";"
+        );
+        
+        Hyperlink signUpLink = new Hyperlink("Sign up now");
+        signUpLink.setStyle(
+            "-fx-font-size: 15px; " +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-border-color: transparent;" +
+            "-fx-font-weight: bold;"
+        );
+        
+        signUpLink.setOnAction(e -> {
+            primaryStage.setScene(SignUpPage.getScene(primaryStage)); // Navigate to SignUpPage
+        });
+        
+        signupLinkBox.getChildren().addAll(notMemberLabel, signUpLink);
+
+        // Add all elements to the login form
+        loginForm.getChildren().addAll(
+            formTitle,
+            tabButtons,
+            new Region() {{ setPrefHeight(15); }},
+            usernameBox,
+            passwordBox,
+            new Region() {{ setPrefHeight(10); }},
+            loginButton,
+            signupLinkBox
+        );
+        
+        // Add the form to the right panel
+        rightPanel.getChildren().add(loginForm);
+        
+        // Add both panels to the main container
+        mainContainer.getChildren().addAll(leftPanel, rightPanel);
+        
+        return new Scene(mainContainer, 1200, 800);
+    }
+
+    private static void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    // Main method for directly launching LoginPage
+    public static void main(String[] args) {
+        launch(args);
     }
 }
