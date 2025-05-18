@@ -190,5 +190,80 @@ public class LoginPage extends Application {
         });
         
         tabButtons.getChildren().addAll(loginTab, signupTab);
+
+        // Username field with icon
+        HBox usernameBox = new HBox(10);
+        usernameBox.setAlignment(Pos.CENTER_LEFT);
+        usernameBox.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_GRAY_BG) + ";" +
+            "-fx-background-radius: 30px;" +
+            "-fx-padding: 5px 15px;"
+        );
+        
+        ImageView userIcon = new ImageView();
+        try {
+            Image icon = new Image("file:src/main/resources/Image/user.png");
+            userIcon.setImage(icon);
+            userIcon.setFitHeight(20);
+            userIcon.setFitWidth(20);
+        } catch (Exception e) {
+            System.out.println("User icon not found");
+        }
+        
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Username");
+        usernameField.setPrefHeight(40);
+        usernameField.setPrefWidth(300);
+        usernameField.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-font-size: 15px;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+        );
+        
+        usernameBox.getChildren().addAll(userIcon, usernameField);
+        
+        // Password field with icon
+        HBox passwordBox = new HBox(10);
+        passwordBox.setAlignment(Pos.CENTER_LEFT);
+        passwordBox.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_GRAY_BG) + ";" +
+            "-fx-background-radius: 30px;" +
+            "-fx-padding: 5px 15px;"
+        );
+        
+        ImageView lockIcon = new ImageView();
+        try {
+            Image icon = new Image("file:src/main/resources/Image/lock.png");
+            lockIcon.setImage(icon);
+            lockIcon.setFitHeight(20);
+            lockIcon.setFitWidth(20);
+        } catch (Exception e) {
+            System.out.println("Lock icon not found");
+        }
+        
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+        passwordField.setPrefHeight(40);
+        passwordField.setPrefWidth(300);
+        passwordField.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-font-size: 15px;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+        );
+        
+        passwordBox.getChildren().addAll(lockIcon, passwordField);
+        
+        // Login button with hover effect
+        Button loginButton = new Button("Login");
+        loginButton.setPrefHeight(50);
+        loginButton.setPrefWidth(360);
+        loginButton.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 16px;" +
+            "-fx-background-radius: 30px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 3, 0, 0, 1);"
+        );
     }
 }
