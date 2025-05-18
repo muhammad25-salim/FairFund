@@ -106,6 +106,158 @@ public class PdfExporter {
             document.add(balanceTable);
             document.add(new Paragraph("\n"));
 
+            // Expenses Section
+            Paragraph expenseSection = new Paragraph("Expenses", sectionFont);
+            expenseSection.setSpacingBefore(10);
+            document.add(expenseSection);
+            
+            if (group.getExpenses().isEmpty()) {
+                document.add(new Paragraph("No expenses recorded for this group.", 
+                    new Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC)));
+            } else {
+                PdfPTable expenseTable = new PdfPTable(4);
+                expenseTable.setWidthPercentage(100);
+                expenseTable.setWidths(new float[]{3, 2, 2, 3});
+                expenseTable.setSpacingBefore(10);
+                
+                // Add table headers
+                PdfPCell titleHeader = new PdfPCell(new Phrase("Description", tableHeaderFont));
+                titleHeader.setBackgroundColor(new BaseColor(41, 128, 185));
+                titleHeader.setPadding(8);
+                
+                PdfPCell amountHeader = new PdfPCell(new Phrase("Amount", tableHeaderFont));
+                amountHeader.setBackgroundColor(new BaseColor(41, 128, 185));
+                amountHeader.setPadding(8);
+                amountHeader.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                
+                PdfPCell payerHeader = new PdfPCell(new Phrase("Payer", tableHeaderFont));
+                payerHeader.setBackgroundColor(new BaseColor(41, 128, 185));
+                payerHeader.setPadding(8);
+                
+                PdfPCell participantsHeader = new PdfPCell(new Phrase("Participants", tableHeaderFont));
+                participantsHeader.setBackgroundColor(new BaseColor(41, 128, 185));
+                participantsHeader.setPadding(8);
+                
+                expenseTable.addCell(titleHeader);
+                expenseTable.addCell(amountHeader);
+                expenseTable.addCell(payerHeader);
+                expenseTable.addCell(participantsHeader);
+
+                // Add expense rows
+                rowCount = 0;
+                for (Expense exp : group.getExpenses()) {
+                    BaseColor rowColor = (rowCount % 2 == 0) ? lightBlue : white;
+                    
+                    PdfPCell titleCell = new PdfPCell(new Phrase(exp.getTitle(), tableContentFont));
+                    titleCell.setBackgroundColor(rowColor);
+                    titleCell.setPadding(6);
+                    
+                    PdfPCell amountCell = new PdfPCell(new Phrase(String.format("%.2f IQD", exp.getTotalAmount()), tableContentFont));
+                    amountCell.setBackgroundColor(rowColor);
+                    amountCell.setPadding(6);
+                    amountCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    
+                    PdfPCell payerCell = new PdfPCell(new Phrase(exp.getPayer().getName(), tableContentFont));
+                    payerCell.setBackgroundColor(rowColor);
+                    payerCell.setPadding(6);
+                    
+                    StringBuilder participantNames = new StringBuilder();
+                    for (Member u : exp.getParticipants()) {
+                        participantNames.append(u.getName()).append(", ");
+                    }
+                    if (participantNames.length() > 0)
+                        participantNames.setLength(participantNames.length() - 2); // remove last comma
+                    
+                    PdfPCell participantsCell = new PdfPCell(new Phrase(participantNames.toString(), tableContentFont));
+                    participantsCell.setBackgroundColor(rowColor);
+                    participantsCell.setPadding(6);
+                    
+                    expenseTable.addCell(titleCell);
+                    expenseTable.addCell(amountCell);
+                    expenseTable.addCell(payerCell);
+                    expenseTable.addCell(participantsCell);
+                    
+                    rowCount++;
+                }
+                
+                document.add(expenseTable);
+            }
+            
+            document.add(new Paragraph("\n"));
+
+            // Add Payments Section
+            Paragraph paymentSection = new Paragraph("Payments", sectionFont);
+            paymentSection.setSpacingBefore(10);
+            document.add(paymentSection);
+            
+            if (group.getPayments().isEmpty()) {
+                document.add(new Paragraph("No payments recorded for this group.", 
+                    new Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC)));
+            } else {
+                PdfPTable paymentTable = new PdfPTable(3);
+                paymentTable.setWidthPercentage(90);
+                paymentTable.setSpacingBefore(10);
+                
+                // Add table headers
+                PdfPCell fromHeader = new PdfPCell(new Phrase("From", tableHeaderFont));
+                fromHeader.setBackgroundColor(new BaseColor(41, 128, 185));
+                fromHeader.setPadding(8);
+                
+                PdfPCell toHeader = new PdfPCell(new Phrase("To", tableHeaderFont));
+                toHeader.setBackgroundColor(new BaseColor(41, 128, 185));
+                toHeader.setPadding(8);
+                
+                PdfPCell amountHeader = new PdfPCell(new Phrase("Amount", tableHeaderFont));
+                amountHeader.setBackgroundColor(new BaseColor(41, 128, 185));
+                amountHeader.setPadding(8);
+                amountHeader.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                
+                paymentTable.addCell(fromHeader);
+                paymentTable.addCell(toHeader);
+                paymentTable.addCell(amountHeader);
+
+                // Add payment rows
+                rowCount = 0;
+                for (Payment payment : group.getPayments()) {
+                    BaseColor rowColor = (rowCount % 2 == 0) ? lightBlue : white;
+                    
+                    PdfPCell fromCell = new PdfPCell(new Phrase(payment.getFrom(), tableContentFont));
+                    fromCell.setBackgroundColor(rowColor);
+                    fromCell.setPadding(6);
+                    
+                    PdfPCell toCell = new PdfPCell(new Phrase(payment.getTo(), tableContentFont));
+                    toCell.setBackgroundColor(rowColor);
+                    toCell.setPadding(6);
+                    
+                    PdfPCell amountCell = new PdfPCell(new Phrase(
+                        String.format("%.2f IQD", payment.getAmount()), 
+                        new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, new BaseColor(0, 102, 204))
+                    ));
+                    amountCell.setBackgroundColor(rowColor);
+                    amountCell.setPadding(6);
+                    amountCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    
+                    paymentTable.addCell(fromCell);
+                    paymentTable.addCell(toCell);
+                    paymentTable.addCell(amountCell);
+                    
+                    rowCount++;
+                }
+                
+                document.add(paymentTable);
+            }
+
+            // Add footer
+            Paragraph footer = new Paragraph("by FairFund App", 
+                new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC));
+            footer.setAlignment(Element.ALIGN_CENTER);
+            footer.setSpacingBefore(20);
+            document.add(footer);
+
+            document.close();
+            System.out.println("PDF exported to: " + filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
