@@ -325,5 +325,65 @@ public class SignUpPage {
             }
         });
 
+         // Already have an account? Login link
+        HBox loginLinkBox = new HBox();
+        loginLinkBox.setAlignment(Pos.CENTER);
+        Label alreadyMemberLabel = new Label("Already have an account? ");
+        alreadyMemberLabel.setStyle(
+            "-fx-font-size: 15px; " +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + ";"
+        );
+        
+        Hyperlink loginLink = new Hyperlink("Login here");
+        loginLink.setStyle(
+            "-fx-font-size: 15px; " +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-border-color: transparent;" +
+            "-fx-font-weight: bold;"
+        );
+        
+        loginLink.setOnAction(e -> {
+            primaryStage.setScene(LoginPage.getScene(primaryStage)); // Navigate to LoginPage
+        });
+        
+        loginLinkBox.getChildren().addAll(alreadyMemberLabel, loginLink);
+
+        // Add all elements to the signup form
+        signupForm.getChildren().addAll(
+            formTitle,
+            tabButtons,
+            new Region() {{ setPrefHeight(15); }},
+            usernameBox,
+            passwordBox,
+            confirmPasswordBox,
+            new Region() {{ setPrefHeight(10); }},
+            signUpButton,
+            loginLinkBox
+        );
+        
+        // Add the form to the right panel
+        rightPanel.getChildren().add(signupForm);
+        
+        // Add both panels to the main container
+        mainContainer.getChildren().addAll(leftPanel, rightPanel);
+        
+        return new Scene(mainContainer, 1200, 800);
+    }
+
+    private static void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private static void showSuccessAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+
     }
 }
