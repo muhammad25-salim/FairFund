@@ -157,5 +157,36 @@ public class SignUpPage {
         );
         
         tabButtons.getChildren().addAll(loginTab, signupTab);
+
+        // Username field with icon
+        HBox usernameBox = new HBox(10);
+        usernameBox.setAlignment(Pos.CENTER_LEFT);
+        usernameBox.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_GRAY_BG) + ";" +
+            "-fx-background-radius: 30px;" +
+            "-fx-padding: 5px 15px;"
+        );
+        
+        ImageView userIcon = new ImageView();
+        try {
+            Image icon = new Image("file:src/main/resources/Image/user.png");
+            userIcon.setImage(icon);
+            userIcon.setFitHeight(20);
+            userIcon.setFitWidth(20);
+        } catch (Exception e) {
+            System.out.println("User icon not found");
+        }
+        
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Choose a username");
+        usernameField.setPrefHeight(40);
+        usernameField.setPrefWidth(300);
+        usernameField.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-font-size: 15px;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+        );
+        
+        usernameBox.getChildren().addAll(userIcon, usernameField);
     }
 }
