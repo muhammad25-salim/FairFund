@@ -48,5 +48,69 @@ public class SignUpPage {
             logoText.setFill(ColorManager.TEXT_COLOR);
             leftPanel.getChildren().add(logoText);
         }
+
+        // Welcome message
+        VBox welcomeBox = new VBox(15);
+        welcomeBox.setAlignment(Pos.CENTER);
+        welcomeBox.setPadding(new Insets(0, 30, 0, 30));
+        
+        Text welcomeTitle = new Text("Join");
+        welcomeTitle.setFont(Font.font("Arial", FontWeight.LIGHT, 36));
+        welcomeTitle.setFill(ColorManager.TEXT_COLOR);
+        
+        Text appTitle = new Text("FairFund");
+        appTitle.setFont(Font.font("Arial", FontWeight.BOLD, 48));
+        appTitle.setFill(ColorManager.TEXT_COLOR);
+        
+        Text tagline = new Text("Start Tracking Expenses Together");
+        tagline.setFont(Font.font("Arial", FontWeight.NORMAL, 18));
+        tagline.setFill(ColorManager.TEXT_COLOR);
+        tagline.setOpacity(0.8);
+        
+        Line separator = new Line(0, 0, 100, 0);
+        separator.setStroke(ColorManager.TEXT_COLOR);
+        separator.setOpacity(0.5);
+        separator.setStrokeWidth(2);
+        separator.setStartX(0);
+        separator.setEndX(200);
+        
+        Text description = new Text("Create an account today and start managing your shared expenses with ease.");
+        description.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        description.setFill(ColorManager.TEXT_COLOR);
+        description.setOpacity(0.8);
+        description.setWrappingWidth(350);
+        
+        welcomeBox.getChildren().addAll(welcomeTitle, appTitle, tagline, separator, description);
+        
+        VBox logoContainer = new VBox(30);
+        logoContainer.setAlignment(Pos.CENTER);
+        logoContainer.getChildren().addAll(logoView);
+        
+        // Stack the logo and welcome message with proper spacing
+        leftPanel.setAlignment(Pos.CENTER);
+        leftPanel.setSpacing(50);
+        leftPanel.getChildren().addAll(logoContainer, welcomeBox);
+        
+        // Right side - Signup form (60% of width)
+        VBox rightPanel = new VBox();
+        rightPanel.setPadding(new Insets(40));
+        rightPanel.setAlignment(Pos.CENTER);
+        rightPanel.setPrefWidth(720); // 60% of 1200px
+        rightPanel.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ", " + 
+            ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ");"
+        );
+        
+        // Signup form container
+        VBox signupForm = new VBox(25);
+        signupForm.setMaxWidth(450);
+        signupForm.setAlignment(Pos.CENTER);
+        signupForm.setPadding(new Insets(40));
+        signupForm.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+            "-fx-background-radius: 15px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.1) + ", 20, 0, 0, 0);"
+        );
     }
 }
