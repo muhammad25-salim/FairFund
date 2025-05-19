@@ -207,3 +207,28 @@ public class OverviewPage {
                 } else {
                     setStyle("");
                 }
+
+                // More elegant hover effect using ColorManager
+                setOnMouseEntered(e -> setStyle("-fx-background-color: linear-gradient(to right, " + 
+                                              ColorManager.toRgbString(ColorManager.HOVER_BLUE_START) + ", " + 
+                                              ColorManager.toRgbString(ColorManager.HOVER_BLUE_END) + 
+                                              "); -fx-cursor: hand;"));
+                setOnMouseExited(e -> {
+                    if (!empty) {
+                        int index = getIndex();
+                        setStyle(index % 2 == 0 
+                            ? "-fx-background-color: linear-gradient(to right, " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ", " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + 
+                              "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";"
+                            : "-fx-background-color: linear-gradient(to right, " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + ", " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                              "); -fx-border-width: 0 0 1 0; -fx-border-color: " + 
+                              ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + ";");
+                    } else {
+                        setStyle("");
+                    }
+                });
+            }
