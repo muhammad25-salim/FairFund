@@ -1,5 +1,6 @@
 package project.controllers;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,3 +112,61 @@ public class NewExpensePage {
                 }
             }
         });
+
+         // Enhanced checkbox container with subtle border
+        VBox checkboxesContainer = new VBox(12, selectAllCheckbox, checkboxes);
+        checkboxesContainer.setStyle(
+            "-fx-border-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-border-width: 1px;" +
+            "-fx-border-radius: 8px;" +
+            "-fx-padding: 10px;"
+        );
+
+        // Save Button Logic remains the same
+        saveBtn.setOnAction(e -> {
+            String title = titleField.getText();
+            if (title.isEmpty()) {
+                showAlert("Error", "You should name the Expense!");
+                return;
+            }
+
+            double totalAmount;
+            try {
+                totalAmount = Double.parseDouble(totalField.getText());
+            } catch (NumberFormatException ex) {
+                showAlert("Invalid Input", "The total should be a number!");
+                return;
+            }
+
+            // Find payer
+            Member payer = findMemberByName(groupMembers, paidByDropdown.getValue());
+            if (payer == null) {
+                showAlert("Error", "Selected payer not found in group!");
+                return;
+            }
+
+            // Collect selected participants
+            List<Member> participants = new ArrayList<>();
+            for (Map.Entry<CheckBox, Member> entry : checkboxMemberMap.entrySet()) {
+                if (entry.getKey().isSelected()) {
+                    participants.add(entry.getValue());
+                }
+            }
+
+            if (participants.isEmpty()) {
+                showAlert("Error", "At least one participant must be selected!");
+                return;
+            }
+
+            // Add expense to group
+            FairFundManager.addExpenseToGroup(groupId, title, totalAmount, payer, participants);
+
+            // Close the popup window
+            Stage popupStage = (Stage) saveBtn.getScene().getWindow();
+            popupStage.close();
+
+            // Refresh the ExpensesPage in the parent window
+            ExpensesPage.refreshExpensesPage(primaryStage, FairFundManager, groupId);
+        });
+    }
+}
