@@ -96,4 +96,49 @@ public class PaymentsPage {
                 "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_VERY_TRANSPARENT, 0.1) + "; " +
                 "-fx-background-radius: 10px; " +
                 "-fx-padding: 10px;"
+            );  
+
+            // Payment details
+            Label amountLabel = new Label(String.format("Amount: $%.2f", payment.getAmount()));
+            amountLabel.setStyle(
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + "; " +
+                "-fx-font-weight: bold;"
             );
+            
+            Label fromToLabel = new Label(String.format("From: %s → To: %s", payment.getFrom(), payment.getTo()));
+            fromToLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";");
+            
+            Label dateLabel = new Label("Date: " + payment.getDate().toString());
+            dateLabel.setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";");
+            
+            HBox bottomRow = new HBox();
+            bottomRow.setAlignment(Pos.CENTER_RIGHT);
+            
+            // Only show delete button if current user is the creator
+            if (payment.getCreator() != null && payment.getCreator().equals(currentUser)) {
+                Button deleteButton = new Button("Delete");
+                deleteButton.setStyle(
+                    "-fx-background-color: " + ColorManager.toRgbString(ColorManager.ERROR_COLOR) + ";" +
+                    "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                    "-fx-font-size: 12px;" +
+                    "-fx-background-radius: 15px;" +
+                    "-fx-padding: 3 10;"
+                );
+                
+                // Add hover effect
+                deleteButton.setOnMouseEntered(e -> deleteButton.setStyle(
+                    "-fx-background-color: derive(" + ColorManager.toRgbString(ColorManager.ERROR_COLOR) + ", -10%);" +
+                    "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                    "-fx-font-size: 12px;" +
+                    "-fx-background-radius: 15px;" +
+                    "-fx-padding: 3 10;" +
+                    "-fx-cursor: hand;"
+                ));
+                
+                deleteButton.setOnMouseExited(e -> deleteButton.setStyle(
+                    "-fx-background-color: " + ColorManager.toRgbString(ColorManager.ERROR_COLOR) + ";" +
+                    "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                    "-fx-font-size: 12px;" +
+                    "-fx-background-radius: 15px;" +
+                    "-fx-padding: 3 10;"
+                ));
