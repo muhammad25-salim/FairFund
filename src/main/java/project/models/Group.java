@@ -1,19 +1,24 @@
 package project.models;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
     private String groupId;
     private String groupName;
-    private List<User> users;
+    private List<Member> Members;
     private List<Expense> expenses;
 
-    public Group(String groupId, String groupName, List<User> users) {
+    private List<Payment> payments; // List of payments
+
+
+    public Group(String groupId, String groupName, List<User> Members) {
         this.groupId = groupId;
         this.groupName = groupName;
-        this.users = users;
+        this.Members = Members;
         this.expenses = new ArrayList<>();
+         this.payments = new ArrayList<>(); // Initialize payments list
     }
     
     public void addExpense(String title, double totalAmount, User payer, List<User> participants) {
@@ -24,13 +29,24 @@ public class Group {
 
     public void recalculateBalances() {
         // Reset all balances to 0 first
-        for (User user : users) {
+        for (User user : Members) {
             user.setBalance(0.0);
         }
     
         // Recalculate all balances based on all expenses
         for (Expense expense : expenses) {
             expense.calculateBalances();
+        }
+
+         // Apply all payments
+        for (Payment payment : payments) {
+            Member payer = getMemberByName(payment.getFrom());
+            Member payee = getMemberByName(payment.getTo());
+            
+            if (payer != null && payee != null) {
+                payer.setBalance(payer.getBalance() + payment.getAmount());
+                payee.setBalance(payee.getBalance() - payment.getAmount());
+            }
         }
     }
 
@@ -47,10 +63,10 @@ public class Group {
         }
     }
     
-    public User getUserByName(String name) {
-        for (User user : users) {
+    public Member getUserByName(String name) {
+        for (User user : Member) {
             if (user.getName().equals(name)) {
-                return user;
+                return Member;
             }
         }
         return null;
@@ -58,6 +74,11 @@ public class Group {
     
     public String getGroupId() { return groupId; }
     public String getGroupName() { return groupName; }
-    public List<User> getUsers() { return users; }
+    public List<Member> getMembers() { return Members; }
     public List<Expense> getExpenses() { return expenses; }
+    public List<Payment> getPayments() { return payments; }
+    public void setPayments(List<Payment> payments) { this.payments = payments; }
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 }
