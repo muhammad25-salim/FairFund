@@ -254,3 +254,44 @@ public class OverviewPage {
         Group group = fairFundManager.getGroup(groupId);
         ObservableList<Member> Members = FXCollections.observableArrayList(group.getMembers());
         table.setItems(Members);
+
+         // Refresh the table
+        table.refresh();       
+
+        // Layout using ColorManager
+        VBox layout = new VBox(10, topBar, tableContainer);
+        layout.setPadding(new Insets(10));
+        layout.setStyle("-fx-background-color: linear-gradient(to bottom right, " + 
+                        ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ", " + 
+                        ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_END) + ");");
+
+        // Return the scene with the layout
+        return new Scene(layout, 1200, 800); // Larger window size
+    }
+
+    private static MenuItem createMenuItem(String text, String iconPath) {
+        MenuItem item = new MenuItem(text);
+        
+        try {
+            // Load icon
+            ImageView icon = new ImageView(new Image(iconPath));
+            icon.setFitWidth(16);
+            icon.setFitHeight(16);
+            item.setGraphic(icon);
+        } catch (Exception ex) {
+            System.out.println("Could not load icon for " + text + ": " + ex.getMessage());
+        }
+        
+        // Style menu item with ColorManager
+        item.setStyle(
+            "-fx-font-size: 14px; " +
+            "-fx-padding: 10px 16px; " +
+            "-fx-font-weight: normal; " +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+        );
+        
+        return item;
+
+
+     }
+}
