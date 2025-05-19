@@ -480,3 +480,106 @@ public class SettingsPage {
         return new VBox(15, memberListLabel, membersTable);
     }
 }
+
+  // Helper method to create add member section
+    private static Node createAddMemberSection(Group group, FairFundManager fairFundManager, String groupId) {
+        Label addMemberLabel = new Label("Add New Member");
+        addMemberLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: " + 
+                              ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+        
+        TextField newMemberField = new TextField();
+        newMemberField.setPromptText("Enter new member name");
+        newMemberField.setStyle("-fx-padding: 10px; -fx-font-size: 16px; -fx-background-radius: 5px; " + 
+                              "-fx-border-radius: 5px; -fx-border-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                              "; -fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + 
+                              "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";");
+        newMemberField.setMaxWidth(400);
+        
+        Button addMemberBtn = new Button("Add Member");
+        styleButton(addMemberBtn, ColorManager.getPrimaryColor());
+        
+        addMemberBtn.setOnAction(e -> {
+            String newMemberName = newMemberField.getText().trim();
+            if (!newMemberName.isEmpty()) {
+                // Check if member already exists
+                boolean exists = false;
+                for (Member m : group.getMembers()) {
+                    if (m.getName().equals(newMemberName)) {
+                        exists = true;
+                        break;
+                    }
+                }
+                
+                if (exists) {
+                    showAlert(Alert.AlertType.WARNING, "Warning", "Member with this name already exists");
+                } else {
+                    // Add to database
+                    try {
+                        DatabaseHelper dbHelper = new DatabaseHelper();
+                        
+                        // Create new member entity
+                        GroupEntity groupEntity = new GroupEntity(groupId, group.getGroupName(), fairFundManager.getCurrentUser().getUsername());
+                        MemberEntity newMember = new MemberEntity(newMemberName, groupEntity);
+                        dbHelper.saveMember(newMember);
+                        
+                        // Add to in-memory model and refresh UI
+                        Member member = new Member(newMemberName);
+                        group.getMembers().add(member);
+                        
+                        // Clear the text field
+                        newMemberField.clear();
+                        
+                        showAlert(Alert.AlertType.INFORMATION, "Success", "New member added successfully");
+                        
+                        dbHelper.close();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        showAlert(Alert.AlertType.ERROR, "Error", "Failed to add new member: " + ex.getMessage());
+                    }
+                }
+            } else {
+                showAlert(Alert.AlertType.WARNING, "Warning", "Member name cannot be empty");
+            }
+        });
+        
+        HBox addMemberBox = new HBox(10, newMemberField, addMemberBtn);
+        addMemberBox.setAlignment(Pos.CENTER_LEFT);
+        
+        return new VBox(15, addMemberLabel, addMemberBox);
+    }
+
+    // Helper method to create account info section
+    private static Node createAccountInfoSection(FairFundManager fairFundManager) {
+        Label accountInfoLabel = new Label("Account Information");
+        accountInfoLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: " + 
+                            ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+    
+        // Username display
+        Label usernameLabel = new Label("Username:");
+        usernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: " + 
+                          ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+    
+        Label usernameValue = new Label(fairFundManager.getCurrentUser().getUsername());
+        usernameValue.setStyle("-fx-font-size: 16px; -fx-text-fill: " + 
+                          ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";");
+        
+        HBox usernameBox = new HBox(10, usernameLabel, usernameValue);
+        usernameBox.setAlignment(Pos.CENTER_LEFT);
+        
+        return new VBox(15, accountInfoLabel, usernameBox);
+    }
+
+    // Helper method to create password change section
+    private static Node createPasswordChangeSection(FairFundManager fairFundManager) {
+        Label passwordLabel = new Label("Change Password");
+        passwordLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: " + 
+                             ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+        
+        // Current password field
+        PasswordField currentPasswordField = new PasswordField();
+        currentPasswordField.setPromptText("Current Password");
+        currentPasswordField.setStyle("-fx-padding: 10px; -fx-font-size: 16px; -fx-background-radius: 5px; " + 
+                                   "-fx-border-radius: 5px; -fx-border-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                                   "; -fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + 
+                                   "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";");
+        currentPasswordField.setMaxWidth(400);
