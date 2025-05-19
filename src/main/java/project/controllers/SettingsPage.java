@@ -906,3 +906,100 @@ public class SettingsPage {
         }
 
         
+          
+        // Update labels with getPrimaryColor() text
+        if (node instanceof Label) {
+            Label label = (Label) node;
+            String style = label.getStyle();
+            if (style != null && style.contains("fx-text-fill") && 
+                isStyleUsingPrimaryColor(style)) {
+                label.setStyle(style.replaceAll(
+                    "-fx-text-fill: rgb\\([0-9]+, [0-9]+, [0-9]+\\);",
+                    "-fx-text-fill: " + ColorManager.toRgbString(newColor) + ";"
+                ));
+            }
+        }
+        
+        // If this is a parent node, recurse through its children
+        if (node instanceof Parent) {
+            Parent parent = (Parent) node;
+            for (Node child : parent.getChildrenUnmodifiable()) {
+                updateNodeColors(child, newColor);
+            }
+        }
+    }
+    
+    
+     // Check if a color is similar to the theme color (getPrimaryColor())
+    
+    private static boolean isColorSimilarToThemeColor(Color color) {
+        // This is a simple comparison - adjust as needed
+        Color themeColor = ColorManager.getPrimaryColor(); // Use getter
+        double threshold = 0.1; // Adjust sensitivity as needed
+        
+        return Math.abs(color.getRed() - themeColor.getRed()) < threshold &&
+               Math.abs(color.getGreen() - themeColor.getGreen()) < threshold &&
+               Math.abs(color.getBlue() - themeColor.getBlue()) < threshold;
+    }
+    
+    /**
+     * Check if a style string is using the getPrimaryColor()
+     */
+    private static boolean isStyleUsingPrimaryColor(String style) {
+        // Get the RGB values of getPrimaryColor()
+        int r = (int)(ColorManager.getPrimaryColor().getRed() * 255);
+        int g = (int)(ColorManager.getPrimaryColor().getGreen() * 255);
+        int b = (int)(ColorManager.getPrimaryColor().getBlue() * 255);
+        
+        // Check if style contains these RGB values
+        String rgbPattern = String.format("rgb\\(%d, %d, %d\\)", r, g, b);
+        return style.matches(".*" + rgbPattern + ".*");
+    }
+    
+    // Helper method to create color selection buttons with a special property to mark them as theme buttons
+    private static ToggleButton createColorButton(String colorHex, ToggleGroup group) {
+        ToggleButton button = new ToggleButton("");
+        button.setUserData(colorHex);
+        button.setToggleGroup(group);
+        
+        // Mark this as a theme button to exclude it from automatic color updates
+        button.getProperties().put("themeButton", true);
+        
+        // Create a circular color preview
+        Rectangle colorPreview = new Rectangle(30, 30);
+        colorPreview.setArcWidth(30);
+        colorPreview.setArcHeight(30);
+        colorPreview.setFill(Color.web(colorHex));
+        
+        // Add a border to highlight the selected state
+        colorPreview.setStroke(Color.TRANSPARENT);
+        colorPreview.setStrokeWidth(2);
+        
+        button.setGraphic(colorPreview);
+        button.setPadding(new Insets(5));
+        button.setStyle("-fx-background-color: white; -fx-background-radius: 15px; -fx-border-radius: 15px; -fx-border-color: #cccccc;");
+        
+        // Add hover effect
+        button.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> 
+            button.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 15px; -fx-border-radius: 15px; -fx-border-color: #aaaaaa;")
+        );
+        
+        button.addEventHandler(MouseEvent.MOUSE_EXITED, e -> 
+            button.setStyle("-fx-background-color: white; -fx-background-radius: 15px; -fx-border-radius: 15px; -fx-border-color: #cccccc;")
+        );
+        
+        // Change the border color when selected
+        button.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                colorPreview.setStroke(Color.BLACK);
+                button.setStyle("-fx-background-color: #e6e6e6; -fx-background-radius: 15px; -fx-border-radius: 15px; -fx-border-color: #888888;");
+            } else {
+                colorPreview.setStroke(Color.TRANSPARENT);
+                button.setStyle("-fx-background-color: white; -fx-background-radius: 15px; -fx-border-radius: 15px; -fx-border-color: #cccccc;");
+            }
+        });
+        
+        return button;
+    }
+}
+
