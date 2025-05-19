@@ -169,5 +169,66 @@ public class CreateGroupPage {
 
         inputBox.getChildren().addAll(GnameField, GidField, createGroupBtn);
         
+         // Or separator like JoinGroupPage
+        HBox orSeparator = new HBox();
+        orSeparator.setAlignment(Pos.CENTER);
+        
+        Line leftLine = new Line(0, 0, 100, 0);
+        leftLine.setStroke(ColorManager.TEXT_COLOR);
+        leftLine.setOpacity(0.5);
+        
+        Text orText = new Text(" OR ");
+        orText.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        orText.setFill(ColorManager.TEXT_COLOR);
+        orText.setOpacity(0.7);
+        
+        Line rightLine = new Line(0, 0, 100, 0);
+        rightLine.setStroke(ColorManager.TEXT_COLOR);
+        rightLine.setOpacity(0.5);
+        
+        orSeparator.getChildren().addAll(leftLine, orText, rightLine);
+        
+        // Join group button styled like the alternate button in JoinGroupPage
+        Button joinGroupBtn = new Button("Join Existing Group");
+        joinGroupBtn.setPrefWidth(300);
+        joinGroupBtn.setPrefHeight(50);
+        joinGroupBtn.setStyle(
+            "-fx-background-color: transparent;" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+            "-fx-border-width: 2px;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 18px;" +
+            "-fx-background-radius: 25;" +
+            "-fx-border-radius: 25;"
+        );
+        
+        // Add hover effects
+        joinGroupBtn.setOnMouseEntered(e -> {
+            joinGroupBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_VERY_TRANSPARENT, 0.1) + ";" +
+                "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+                "-fx-border-width: 2px;" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 18px;" +
+                "-fx-background-radius: 25;" +
+                "-fx-border-radius: 25;" +
+                "-fx-cursor: hand;"
+            );
+        });
+        
+        joinGroupBtn.setOnMouseExited(e -> {
+            joinGroupBtn.setStyle(
+                "-fx-background-color: transparent;" +
+                "-fx-border-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+                "-fx-border-width: 2px;" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+                "-fx-font-size: 18px;" +
+                "-fx-background-radius: 25;" +
+                "-fx-border-radius: 25;"
+            );
+        });
+        
+        joinGroupBtn.setOnAction(e -> primaryStage.setScene(JoinGroupPage.getScene(primaryStage, FairFundManager)));
+        
     }
 }
