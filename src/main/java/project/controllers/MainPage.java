@@ -152,7 +152,7 @@ public class MainPage extends Application {
     }
 
     private void openCreateGroup() {
-        primaryStage.setScene(CreateGroupage.getScene(primaryStage, FairFundManager));
+        primaryStage.setScene(CreateGroupPage.getScene(primaryStage, FairFundManager));
     }
 
     private void openJoinGroup() {
