@@ -1,7 +1,7 @@
 # FairFund - Expense Sharing & Management System
 
 <p align="center">
-  <img src="./images/fairfund_logo.png" alt="FairFund Logo" width="400"/>
+  <img src="" alt="FairFund Logo" width="400"/>
 </p>
 
 ## Overview
