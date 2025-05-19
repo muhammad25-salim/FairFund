@@ -2,12 +2,10 @@ package project.models;
 
 import project.database.DatabaseHelper;
 import project.database.entities.GroupEntity;
+import project.database.entities.MemberEntity;
 import project.database.entities.UserEntity;
 import project.database.entities.ExpenseEntity;
-import project.database.entities.MemberEntity;
 import project.database.entities.PaymentEntity;
-
-import java.lang.reflect.Member;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class FairFundManager {
+    
     private DatabaseHelper databaseHelper;
     private Map<String, Group> groups;
     private UserEntity currentUser;
