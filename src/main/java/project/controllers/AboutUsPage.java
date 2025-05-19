@@ -116,3 +116,59 @@ public class AboutUsPage {
         description.setFill(ColorManager.TEXT_COLOR);
         description.setTextAlignment(TextAlignment.LEFT);
         description.setWrappingWidth(700);
+
+         
+        // Version Information 
+        HBox versionBox = new HBox(10);
+        versionBox.setAlignment(Pos.CENTER);
+        
+        Label versionLabel = new Label("Version:");
+        versionLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        versionLabel.setTextFill(ColorManager.TEXT_COLOR);
+        
+        Label versionNumber = new Label("1.0.0");
+        versionNumber.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        versionNumber.setTextFill(ColorManager.TEXT_COLOR);
+        
+        versionBox.getChildren().addAll(versionLabel, versionNumber);
+        
+        // Team Section
+        Text teamTitle = new Text("Development Team");
+        teamTitle.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        teamTitle.setFill(ColorManager.TEXT_COLOR);
+        
+        // Team members in a grid
+        GridPane teamGrid = new GridPane();
+        teamGrid.setHgap(30);
+        teamGrid.setVgap(15);
+        teamGrid.setAlignment(Pos.CENTER);
+        
+        String[] members = {
+            "Muhammad Salim", "Ahmad Hamad",
+            "Muhammad Qadir", "AbdullAzeez Shwan"
+        };
+        
+        String[] roles = {
+            "Core Development & Database Architecture", 
+            "UI/UX Design & Frontend Implementation",
+            "Business Logic & Algorithm Development", 
+            "Quality Assurance & Testing Infrastructure"
+        };
+        
+        for (int i = 0; i < members.length; i++) {
+            VBox memberBox = new VBox(5);
+            memberBox.setAlignment(Pos.CENTER);
+            memberBox.setMinWidth(350); // Ensure enough width for longer role descriptions
+            
+            Circle memberCircle = new Circle(40, 40, 40);
+            memberCircle.setFill(Color.web(ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR)));
+            Text initial = new Text(members[i].substring(0, 1));
+            initial.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+            initial.setFill(ColorManager.getPrimaryColor());
+            
+            StackPane memberIcon = new StackPane(memberCircle, initial);
+            
+            Text memberName = new Text(members[i]);
+            memberName.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+            memberName.setFill(ColorManager.TEXT_COLOR);
+            
