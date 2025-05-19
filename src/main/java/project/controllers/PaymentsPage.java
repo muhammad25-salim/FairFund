@@ -142,3 +142,48 @@ public class PaymentsPage {
                     "-fx-background-radius: 15px;" +
                     "-fx-padding: 3 10;"
                 ));
+
+                 // Delete action
+                deleteButton.setOnAction(e -> {
+                    // Confirm dialog
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setTitle("Delete Payment");
+                    confirm.setHeaderText("Delete Payment");
+                    confirm.setContentText("Are you sure you want to delete this payment?");
+                    
+                    // Style the confirmation dialog
+                    DialogPane dialogPane = confirm.getDialogPane();
+                    dialogPane.setStyle(
+                        "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+                        "-fx-border-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+                        "-fx-border-width: 2px;" +
+                        "-fx-border-radius: 5px;"
+                    );
+                    dialogPane.lookup(".content.label").setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+                    dialogPane.lookup(".header-panel").setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";");
+                    dialogPane.lookup(".header-panel .label").setStyle("-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";");
+                    
+                    // Style the buttons in the dialog
+                    Button okButton = (Button) dialogPane.lookupButton(ButtonType.OK);
+                    okButton.setStyle(
+                        "-fx-background-color: " + ColorManager.toRgbString(ColorManager.ERROR_COLOR) + ";" +
+                        "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";"
+                    );
+                    
+                    Button cancelButton = (Button) dialogPane.lookupButton(ButtonType.CANCEL);
+                    cancelButton.setStyle(
+                        "-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_GRAY_BG) + ";" +
+                        "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";"
+                    );
+                    
+                    confirm.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            // Delete payment and refresh page
+                            fairFundManager.removePaymentFromGroup(groupId, payment);
+                            primaryStage.setScene(PaymentsPage.getScene(primaryStage, fairFundManager, groupId));
+                        }
+                    });
+                });
+                
+                bottomRow.getChildren().add(deleteButton);
+            }
