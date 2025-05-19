@@ -92,4 +92,4 @@ The main menu provides access to all key features through intuitive icons:
 - **Calculation Discrepancies**: Check that all expenses are properly categorized
 
 ### Need More Help?
-Contact our support team at support@fairfund.com or visit our help center at help.fairfund.com for additional assistance.
+Contact our support team at muhamad.salim0908@gmail.com or visit our help center at help.fairfund.com for additional assistance.
