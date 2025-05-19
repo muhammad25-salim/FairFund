@@ -98,23 +98,60 @@ public class DatabaseHelper {
         System.out.println("Deleting expense from database with ID: " + expense.getId());
         expenseDao.delete(expense);  // Deletes the expense from the database
     }
-    
+
+    public void saveExpenseParticipants(ExpenseEntity expenseEntity, List<MemberEntity> Members) throws SQLException {
+        for (MemberEntity Member : Members) {
+            expenseParticipantDao.create(new ExpenseParticipantEntity(expenseEntity, Member));
+        }
+    }
+
+    public void deleteParticipantsByExpense(ExpenseEntity expense) throws SQLException {
+        List<ExpenseParticipantEntity> links = expenseParticipantDao.queryForEq("expense_id", expense.getId());
+        for (ExpenseParticipantEntity link : links) {
+            expenseParticipantDao.delete(link);
+        }
+    } 
 
     // Retrieve methods
+    public UserEntity getUserByUsername(String username) throws SQLException {
+        return userDao.queryForEq("username", username).stream().findFirst().orElse(null);
+    }
+
     public List<GroupEntity> getAllGroups() throws SQLException {
         return groupDao.queryForAll();
     }
 
-    public List<UserEntity> getUsersByGroup(GroupEntity group) throws SQLException {
-        return userDao.queryForEq("group_id", group);
+     public List<MemberEntity> getMembersByGroup(GroupEntity group) throws SQLException {
+        return MemberDao.queryForEq("group_id", group);
     }
 
     public List<ExpenseEntity> getExpensesByGroup(String groupId) throws SQLException {
         return expenseDao.queryForEq("groupId", groupId);
     }
 
+       public List<MemberEntity> getParticipantsByExpense(ExpenseEntity expenseEntity) throws SQLException {
+        List<ExpenseParticipantEntity> links = expenseParticipantDao.queryForEq("expense_id", expenseEntity.getId());
+        List<MemberEntity> participants = new ArrayList<>();
+        for (ExpenseParticipantEntity link : links) {
+            participants.add(link.getMember());
+        }
+        return participants;
+    }
+
+    public List<GroupEntity> getGroupsByCreator(String creatorUsername) throws SQLException {
+        return getGroupDao().queryBuilder().where().eq("creator", creatorUsername).query();
+    }
+
+    public List<PaymentEntity> getPaymentsByGroup(String groupId) throws SQLException {
+        return paymentDao.queryBuilder().where().eq("groupId", groupId).query();
+    }
+
     public Dao<GroupEntity, String> getGroupDao() {
         return groupDao;
+    }
+
+    public Dao<UserEntity, Integer> getUserDao() throws SQLException {
+        return userDao;
     }
 
     public void close() {
@@ -132,5 +169,18 @@ public class DatabaseHelper {
         TableUtils.createTableIfNotExists(connectionSource, GroupEntity.class);
         TableUtils.createTableIfNotExists(connectionSource, UserEntity.class);
         TableUtils.createTableIfNotExists(connectionSource, ExpenseEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, MemberEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, ExpenseParticipantEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, PaymentEntity.class);
+
     }
+
+        public void savePayment(PaymentEntity payment) throws SQLException {
+        paymentDao.create(payment);
+    }
+
+    public void deletePayment(PaymentEntity payment) throws SQLException {
+        paymentDao.delete(payment);
+    }
+
 }
