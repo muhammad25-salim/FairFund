@@ -21,3 +21,26 @@ public class LocalDatePersister extends BaseDataType {
     public static LocalDatePersister getSingleton() {
         return INSTANCE;
     }
+
+    @Override
+    public Object parseDefaultString(FieldType fieldType, String defaultStr) throws SQLException {
+        return LocalDate.parse(defaultStr, FORMATTER);
+    }
+
+    @Override
+    public Object javaToSqlArg(FieldType fieldType, Object javaObject) {
+        return javaObject == null ? null : ((LocalDate) javaObject).format(FORMATTER);
+    }
+
+    @Override
+    public Object sqlArgToJava(FieldType fieldType, Object sqlArg, int columnPos) {
+        return sqlArg == null ? null : LocalDate.parse((String) sqlArg, FORMATTER);
+    }
+
+    @Override
+    public Object resultToSqlArg(FieldType fieldType, DatabaseResults results, int columnPos) throws SQLException {
+        String value = results.getString(columnPos);
+        return value == null ? null : value;
+    }
+}
+
