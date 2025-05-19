@@ -230,5 +230,66 @@ public class CreateGroupPage {
         
         joinGroupBtn.setOnAction(e -> primaryStage.setScene(JoinGroupPage.getScene(primaryStage, FairFundManager)));
         
+         // Add all elements to content box
+        createGroupContent.getChildren().addAll(createGroupTitle, descriptionText, inputBox, orSeparator, joinGroupBtn);
+        createGroupPanel.getChildren().add(createGroupContent);
+        
+        // Information panel (right side) - replaces userGroupsPanel from JoinGroupPage
+        VBox infoPanel = new VBox(20);
+        infoPanel.setPadding(new Insets(25));
+        infoPanel.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_OPAQUE, 0.9) + ";" + 
+            "-fx-background-radius: 20px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 8, 0, 0, 2);"
+        );
+        infoPanel.setPrefWidth(300);
+        infoPanel.setMaxHeight(600);
+        
+        Text infoTitle = new Text("Group Guidelines");
+        infoTitle.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        infoTitle.setFill(ColorManager.getPrimaryColor());
+        
+        // Styled separator
+        Separator infoSeparator = new Separator();
+        infoSeparator.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";");
+        infoSeparator.setOpacity(0.6);
+        
+        // Information items
+        VBox infoItems = new VBox(15);
+        infoItems.setPadding(new Insets(10, 0, 0, 0));
+        
+        Text guideline1 = new Text("• Choose a unique Group ID that you'll share with other members");
+        guideline1.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        guideline1.setWrappingWidth(280);
+        guideline1.setFill(ColorManager.DARK_GRAY);
+        
+        Text guideline2 = new Text("• Give your group a descriptive name so members can recognize it");
+        guideline2.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        guideline2.setWrappingWidth(280);
+        guideline2.setFill(ColorManager.DARK_GRAY);
+        
+        Text guideline3 = new Text("• You'll be able to add members in the next step");
+        guideline3.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        guideline3.setWrappingWidth(280);
+        guideline3.setFill(ColorManager.DARK_GRAY);
+        
+        Text guideline4 = new Text("• All members can add expenses and make payments");
+        guideline4.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        guideline4.setWrappingWidth(280);
+        guideline4.setFill(ColorManager.DARK_GRAY);
+        
+        infoItems.getChildren().addAll(guideline1, guideline2, guideline3, guideline4);
+        infoPanel.getChildren().addAll(infoTitle, infoSeparator, infoItems);
+
+        // Main layout
+        HBox mainContent = new HBox(20);
+        mainContent.setAlignment(Pos.CENTER);
+        mainContent.getChildren().addAll(createGroupPanel, infoPanel);
+        
+        // Set the top and center of the BorderPane
+        mainLayout.setTop(topLayout);
+        mainLayout.setCenter(mainContent);
+
+        return new Scene(mainLayout, 1200, 800);
     }
 }
