@@ -12,8 +12,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import project.models.*;
@@ -27,7 +25,7 @@ public class AddMembersPage {
         mainLayout.setPadding(new Insets(20));
 
         StackPane roundedPanel = new StackPane();
-        roundedPanel.setStyle("-fx-background-color: " ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-background-radius: 20px; -fx-padding: 40px;");
+        roundedPanel.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-background-radius: 20px; -fx-padding: 40px;");
         roundedPanel.setMaxWidth(500);// Increased width
         roundedPanel.setMaxHeight(400); // Increased height
 

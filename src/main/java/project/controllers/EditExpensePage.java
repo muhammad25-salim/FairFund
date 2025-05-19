@@ -1,9 +1,5 @@
 package project.controllers;
 
-import java.lang.reflect.Member;
-import java.util.HashMap;
-import java.util.Map;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +12,8 @@ import javafx.scene.text.Text;
 import project.models.*;
 import project.utils.ColorManager;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class EditExpensePage {
