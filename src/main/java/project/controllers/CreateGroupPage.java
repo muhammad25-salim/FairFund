@@ -55,5 +55,119 @@ public class CreateGroupPage {
             MainPage mainPage = new MainPage(FairFundManager);
             mainPage.start(primaryStage);
         });
+
+         // Top Layout with Back Button
+        HBox topLayout = new HBox(backButton);
+        topLayout.setAlignment(Pos.TOP_LEFT);
+        topLayout.setPadding(new Insets(10, 10, 20, 10));
+        
+        // Create Group Panel (Center) - Styled panel
+        StackPane createGroupPanel = new StackPane();
+        createGroupPanel.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" + 
+            "-fx-background-radius: 30px;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 15, 0, 0, 5);"
+        );
+        createGroupPanel.setPrefWidth(650);
+        createGroupPanel.setPrefHeight(550);
+        
+        VBox createGroupContent = new VBox(40);
+        createGroupContent.setAlignment(Pos.CENTER);
+        createGroupContent.setPadding(new Insets(50));
+        
+        // Title styled like JoinGroupPage
+        Text createGroupTitle = new Text("Create a Group");
+        createGroupTitle.setFont(Font.font("Arial", FontWeight.BOLD, 42));
+        createGroupTitle.setFill(ColorManager.TEXT_COLOR);
+        
+        // Description text
+        Text descriptionText = new Text("Enter group details to create a new group");
+        descriptionText.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
+        descriptionText.setFill(ColorManager.TEXT_COLOR);
+        descriptionText.setOpacity(0.8);
+        
+        VBox inputBox = new VBox(20);
+        inputBox.setMaxWidth(450);
+        inputBox.setAlignment(Pos.CENTER);
+        
+        // Group name field styled input
+        TextField GnameField = new TextField();
+        GnameField.setPromptText("Group name");
+        GnameField.setMinHeight(60);
+        GnameField.setPrefWidth(450);
+        GnameField.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-border-width: 0 0 2 0;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 20px;" +
+            "-fx-padding: 15 15 15 15;" +
+            "-fx-background-radius: 10 10 0 0;"
+        );
+        
+        // Group ID field styled input
+        TextField GidField = new TextField();
+        GidField.setPromptText("Group ID");
+        GidField.setMinHeight(60);
+        GidField.setPrefWidth(450);
+        GidField.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_SEMI_TRANSPARENT, 0.2) + ";" +
+            "-fx-border-color: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-border-width: 0 0 2 0;" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) + ";" +
+            "-fx-font-size: 20px;" +
+            "-fx-padding: 15 15 15 15;" +
+            "-fx-background-radius: 10 10 0 0;"
+        );
+        
+        // Create group button styled button
+        Button createGroupBtn = new Button("Create Group");
+        createGroupBtn.setPrefWidth(300);
+        createGroupBtn.setPrefHeight(60);
+        createGroupBtn.setStyle(
+            "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+            "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+            "-fx-font-size: 22px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 30;" +
+            "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 5, 0, 0, 1);"
+        );
+        
+        // Add hover effects like JoinGroupPage
+        createGroupBtn.setOnMouseEntered(e -> {
+            createGroupBtn.setStyle(
+                "-fx-background-color: derive(" + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ", -10%);" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+                "-fx-font-size: 22px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 30;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.3) + ", 8, 0, 0, 2);" +
+                "-fx-cursor: hand;"
+            );
+        });
+        
+        createGroupBtn.setOnMouseExited(e -> {
+            createGroupBtn.setStyle(
+                "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + ";" +
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";" +
+                "-fx-font-size: 22px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 30;" +
+                "-fx-effect: dropshadow(gaussian, " + ColorManager.toRgbaString(ColorManager.BLACK_SEMI_TRANSPARENT, 0.2) + ", 5, 0, 0, 1);"
+            );
+        });
+        
+        createGroupBtn.setOnAction(e -> {
+            String groupId = GidField.getText().trim();
+            String groupName = GnameField.getText().trim();
+
+            if (!groupId.isEmpty() && !groupName.isEmpty()) {
+                // Go to AddMembersPage instead of creating group here
+                primaryStage.setScene(AddMembersPage.getScene(primaryStage, FairFundManager, groupId, groupName));
+            }
+        });
+
+        inputBox.getChildren().addAll(GnameField, GidField, createGroupBtn);
+        
     }
 }
