@@ -786,4 +786,123 @@ public class SettingsPage {
         return new VBox(15, themeLabel, colorOptions, previewBox, applyThemeBtn);
     }
 
+
+     
+    /**
+     * Apply theme changes immediately to all relevant UI elements in the current scene
+     * and ensure the changes persist across page transitions
+     */
+    private static void applyThemeChangesImmediately(Scene scene, Color newColor) {
+        if (scene == null) return;
+        
+        try {
+            // 1. Update the ColorManager with the new theme
+            ColorManager.updatePrimaryTheme(newColor);
+            
+            // 2. Start with the root node and traverse the scene graph
+            updateNodeColors(scene.getRoot(), newColor);
+            
+            // 3. Store in preferences for persistence across app restarts
+            java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(ColorManager.class);
+            prefs.put("primaryThemeColor", ColorManager.toRgbString(newColor));
+            prefs.flush();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Some theme changes couldn't be applied: " + e.getMessage());
+        }
+    }
     
+    /**
+     * Recursively update all UI elements that use getPrimaryColor() in the scene graph
+     */
+    private static void updateNodeColors(Node node, Color newColor) {
+        if (node == null) return;
+        
+        // Update buttons
+        if (node instanceof Button) {
+            styleButton((Button) node, newColor);
+        }
+        
+        // Update toggle buttons - excluding the theme selection buttons which should keep their individual colors
+        if (node instanceof ToggleButton && !(node.getProperties().containsKey("themeButton"))) {
+            styleButton((ToggleButton) node, newColor);
+        }
+        
+        // Update rectangles that use getPrimaryColor() (like our accent bars)
+        if (node instanceof Rectangle) {
+            Rectangle rect = (Rectangle) node;
+            // Only update rectangles that were using the getPrimaryColor()
+            if (rect.getFill() instanceof Color) {
+                Color rectColor = (Color) rect.getFill();
+                // If this rectangle was using a color similar to getPrimaryColor()
+                if (isColorSimilarToThemeColor(rectColor)) {
+                    rect.setFill(newColor);
+                }
+            }
+        }
+        
+        // Update Separators (divider lines)
+        if (node instanceof Separator) {
+            String style = node.getStyle();
+            if (style != null && style.contains("fx-background-color")) {
+                // Replace color in style
+                node.setStyle(style.replaceAll(
+                    "-fx-background-color: rgb\\([0-9]+, [0-9]+, [0-9]+\\);",
+                    "-fx-background-color: " + ColorManager.toRgbString(newColor) + ";"
+                ));
+            }
+        }
+        
+        // Update tab selection styles
+        // Handle Tab styling separately if needed
+        if (node instanceof TabPane) {
+            TabPane tabPane = (TabPane) node;
+            Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                String tabStyle = "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + "; " +
+                                  "-fx-padding: 10px 20px; " +
+                                  "-fx-font-size: 15px; -fx-font-weight: bold; " +
+                                  "-fx-background-radius: 10px 10px 0 0; " +
+                                  "-fx-focus-color: transparent; -fx-faint-focus-color: transparent;";
+                String selectedTabStyle = tabStyle + "-fx-border-width: 0 0 4 0; -fx-border-color: " + 
+                                          ColorManager.toRgbString(newColor) + ";";
+                for (Tab tab : tabPane.getTabs()) {
+                    if (tab == selectedTab) {
+                        tab.setStyle(selectedTabStyle);
+                    } else {
+                        tab.setStyle(tabStyle);
+                    }
+                }
+            }
+        }
+        
+        // Fix for TabPane - update tabs directly
+        if (node instanceof TabPane) {
+            TabPane tabPane = (TabPane) node;
+            
+            // Get the current styles
+            Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                // Create updated styles
+                String tabStyle = "-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + "; " +
+                                  "-fx-padding: 10px 20px; " +
+                                  "-fx-font-size: 15px; -fx-font-weight: bold; " +
+                                  "-fx-background-radius: 10px 10px 0 0; " +
+                                  "-fx-focus-color: transparent; -fx-faint-focus-color: transparent;";
+                
+                String selectedTabStyle = tabStyle + "-fx-border-width: 0 0 4 0; -fx-border-color: " + 
+                                          ColorManager.toRgbString(newColor) + ";";
+                
+                // Apply to all tabs
+                for (Tab tab : tabPane.getTabs()) {
+                    if (tab == selectedTab) {
+                        tab.setStyle(selectedTabStyle);
+                    } else {
+                        tab.setStyle(tabStyle);
+                    }
+                }
+            }
+        }
+
+        
