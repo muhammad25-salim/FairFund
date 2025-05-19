@@ -168,5 +168,71 @@ public class NewExpensePage {
             // Refresh the ExpensesPage in the parent window
             ExpensesPage.refreshExpensesPage(primaryStage, FairFundManager, groupId);
         });
+
+         // Enhanced content box with spacing
+        VBox blueBox = new VBox(20);
+        blueBox.getChildren().addAll(
+            titleText, 
+            titleField, 
+            new Separator(), // visual separator
+            totalRow, 
+            new Separator(), // visual separator
+            paidForLabel, 
+            checkboxesContainer
+        );
+        blueBox.setPadding(new Insets(30));
+        blueBox.setAlignment(Pos.TOP_LEFT);
+        
+        // Enhanced background with gradient
+        blueBox.setStyle(
+            "-fx-background-color: linear-gradient(to bottom right, " + 
+            ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", " + 
+            "derive(" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ", -15%));" + 
+            "-fx-background-radius: 20px;"
+        );
+
+        StackPane stackPane = new StackPane(blueBox);
+        StackPane.setMargin(blueBox, new Insets(20));
+
+        // Use the existing button styling
+        styleButtons(backBtn, saveBtn);
+
+        backBtn.setOnAction(e -> {
+            Stage popupStage = (Stage) backBtn.getScene().getWindow();
+            popupStage.close();
+            ExpensesPage.refreshExpensesPage(primaryStage, FairFundManager, groupId);
+        });
+
+        // Button box with spacer
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox buttonsBox = new HBox(10, backBtn, spacer, saveBtn);
+        buttonsBox.setPadding(new Insets(10));
+        buttonsBox.setAlignment(Pos.CENTER);
+
+        // Root layout with subtle background
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BG_GRADIENT_START) + ";");
+        root.setPadding(new Insets(20));
+        root.setTop(buttonsBox);
+        root.setCenter(stackPane);
+
+        return new Scene(root, 700, 600);
+    }
+
+    private static Member findMemberByName(List<Member> Members, String name) {
+        for (Member u : Members) {
+            if (u.getName().equals(name)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+    private static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
     }
 }
