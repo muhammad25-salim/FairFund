@@ -172,3 +172,65 @@ public class AboutUsPage {
             memberName.setFont(Font.font("Arial", FontWeight.BOLD, 16));
             memberName.setFill(ColorManager.TEXT_COLOR);
             
+
+             // Create a text with wrapping for longer role descriptions
+            Text memberRole = new Text(roles[i]);
+            memberRole.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+            memberRole.setFill(Color.web(ColorManager.toRgbString(ColorManager.TEXT_COLOR), 0.8));
+            memberRole.setTextAlignment(TextAlignment.CENTER);
+            memberRole.setWrappingWidth(300);
+            
+            memberBox.getChildren().addAll(memberIcon, memberName, memberRole);
+            
+            teamGrid.add(memberBox, i % 2, i / 2);
+        }
+        
+        // Copyright
+        Text copyright = new Text("© 2025 Fair Fund Team. All rights reserved.");
+        copyright.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        copyright.setFill(Color.web(ColorManager.toRgbString(ColorManager.TEXT_COLOR), 0.8));
+        
+        // Add all elements to content panel
+        VBox mainContent = new VBox(20);
+        mainContent.setAlignment(Pos.CENTER);
+        
+        if (logoView != null) {
+            mainContent.getChildren().add(logoView);
+        }
+        
+        mainContent.getChildren().addAll(
+            appTitle,
+            tagline,
+            separator,
+            descriptionTitle,
+            description,
+            new Separator(),
+            versionBox,
+            teamTitle,
+            teamGrid,
+            copyright
+        );
+        
+        ScrollPane scrollPane = new ScrollPane(mainContent);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        
+        roundedPanel.getChildren().add(scrollPane);
+        
+        // Add components to the main layout
+        mainLayout.setTop(topLayout);
+        mainLayout.setCenter(roundedPanel);
+        
+        // Create and return the scene
+        return new Scene(mainLayout, 1200, 800);
+    }
+    
+    // Custom Circle class for member icons
+    private static class Circle extends javafx.scene.shape.Circle {
+        public Circle(double centerX, double centerY, double radius) {
+            super(centerX, centerY, radius);
+        }
+    }
+}
+
