@@ -102,13 +102,13 @@ public class MainPage extends Application {
 
         Text title = new Text("FAIR FUND");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 50));
-        title.setFill(Color.web("#238BFA"));
+        title.setFill(Color.web(ColorManager.toRgbString(ColorManager.getPrimaryColor()))); // Set the color to match the blue shape
 
        
-        VBox.setMargin(title, new Insets(50, 0, 0, 110));
+        VBox.setMargin(title, new Insets(50, 0, 0, 250));
 
         Text subTitle = new Text("Fair, Fast, Transparent");
-        subTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        subTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
         subTitle.setFill(Color.web(ColorManager.toRgbString(ColorManager.getPrimaryColor()))); 
 
        
