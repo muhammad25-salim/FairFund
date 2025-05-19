@@ -12,9 +12,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import project.models.*;
+import project.utils.ColorManager;
 
 public class AddMembersPage {
 
@@ -24,15 +27,16 @@ public class AddMembersPage {
         mainLayout.setPadding(new Insets(20));
 
         StackPane roundedPanel = new StackPane();
-        roundedPanel.setStyle("-fx-background-color: #238BFA; -fx-background-radius: 20px; -fx-padding: 40px;");
-        roundedPanel.setMaxWidth(350);
+        roundedPanel.setStyle("-fx-background-color: " ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-background-radius: 20px; -fx-padding: 40px;");
+        roundedPanel.setMaxWidth(500);// Increased width
+        roundedPanel.setMaxHeight(400); // Increased height
 
-        VBox contentBox = new VBox(10);
+        VBox contentBox = new VBox(15);
         contentBox.setAlignment(Pos.CENTER);
 
         Text title = new Text("Add Members");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        title.setFill(Color.WHITE);
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        title.setFill(Color.web(ColorManager.toRgbString(ColorManager.TEXT_COLOR)));
 
         VBox inputList = new VBox(8);
         inputList.setAlignment(Pos.CENTER);
@@ -43,17 +47,17 @@ public class AddMembersPage {
         addNewMemberInput(inputList, memberInputs);
 
         Text instructions = new Text("Press 'Enter' to add new members");
-        instructions.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
-        instructions.setFill(Color.WHITE);
+        instructions.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        instructions.setFill(Color.web(ColorManager.toRgbString(ColorManager.TEXT_COLOR)));
 
         Button saveButton = new Button("Save Group");
-        saveButton.setStyle("-fx-background-color: white; -fx-text-fill: #238BFA; -fx-font-weight: bold;");
+        saveButton.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) +"; -fx-text-fill:" + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + "; -fx-font-weight: bold; -fx-font-size: 16px;");
         saveButton.setOnAction(e -> {
-            List<User> members = new ArrayList<>();
+            List<Member> members = new ArrayList<>();
             for (TextField field : memberInputs) {
                 String name = field.getText().trim();
                 if (!name.isEmpty()) {
-                    members.add(new User(name));
+                    members.add(new Member(name));
                 }
             }
 
@@ -67,13 +71,13 @@ public class AddMembersPage {
         roundedPanel.getChildren().add(contentBox);
         mainLayout.getChildren().add(roundedPanel);
 
-        return new Scene(mainLayout, 600, 400);
+        return new Scene(mainLayout, 1200, 800);
     }
 
     private static void addNewMemberInput(VBox inputList, List<TextField> memberInputs) {
         TextField memberField = new TextField();
         memberField.setPromptText("Member name");
-        memberField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0 0 1 0; -fx-text-fill: white;");
+        memberField.setStyle("-fx-background-color: transparent; -fx-border-color:" + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) +"; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR) +"; -fx-border-width: 0 0 2 0; -fx-font-size: 16px;");
         memberField.setFont(Font.font(14));
 
         memberField.setOnKeyPressed(event -> {
