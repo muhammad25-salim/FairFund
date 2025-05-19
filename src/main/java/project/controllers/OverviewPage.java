@@ -142,17 +142,11 @@ public class OverviewPage {
         nameColumn.setMinWidth(300); // Increased width
         nameColumn.setStyle("-fx-font-size: 18px; -fx-alignment: CENTER-LEFT; -fx-font-weight: bold;");
 
-<<<<<<< HEAD
-        TableColumn<User, String> balanceColumn = new TableColumn<>("Balance (IQD)");
-=======
         TableColumn<Member, String> balanceColumn = new TableColumn<>("Balance (IQD)");
->>>>>>> 1abfdcc2df29435cb06cc327f245fbdcaf0a1ae9
         balanceColumn.setCellValueFactory(cellData -> cellData.getValue().balanceProperty().asString("%.2f"));
         balanceColumn.setMinWidth(200); // Increased width
         balanceColumn.setStyle("-fx-font-size: 18px; -fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;");
 
-
-        
         // Add custom cell factory for balance column to style positive/negative values
         balanceColumn.setCellFactory(column -> {
             return new TableCell<Member, String>() {
@@ -255,7 +249,7 @@ public class OverviewPage {
         ObservableList<Member> Members = FXCollections.observableArrayList(group.getMembers());
         table.setItems(Members);
 
-         // Refresh the table
+        // Refresh the table
         table.refresh();       
 
         // Layout using ColorManager
@@ -291,7 +285,5 @@ public class OverviewPage {
         );
         
         return item;
-
-
-     }
+    }
 }
