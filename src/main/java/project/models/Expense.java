@@ -9,17 +9,18 @@ public class Expense {
 
     private SimpleStringProperty title; 
     private SimpleDoubleProperty totalAmount; 
-    private User payer; 
-    private List<User> participants; 
-    private int id;
+    private Member payer; 
+    private List<Member> participants; 
+    private int id;  // Add this ID field for in-memory reference
     private String creator;
 
-    public Expense(int id ,String title, double totalAmount, User payer, List<User> participants) {
+
+    public Expense(int id, String title, double totalAmount, Member payer, List<Member> participants) {
+        this.id = id;
         this.title = new SimpleStringProperty(title);
         this.totalAmount = new SimpleDoubleProperty(totalAmount);
         this.payer = payer;
         this.participants = participants;
-        this.id=id;
     }
 
    
@@ -30,21 +31,24 @@ public class Expense {
     public SimpleDoubleProperty totalAmountProperty() {
         return totalAmount;
     }
+
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
-    public void setPayer(User payer) {
+
+    public void setPayer(Member payer) {
         this.payer = payer;
     }    
 
-    public User getPayer() {
+    public Member getPayer() {
         return payer;
     }
 
-    public List<User> getParticipants() {
+    public List<Member> getParticipants() {
         return participants;
     }
 
@@ -81,7 +85,7 @@ public class Expense {
         double splitAmount = totalAmount.get() / participants.size();
     
         // 1. Participants owe their share
-        for (User participant : participants) {
+        for (Member participant : participants) {
             participant.setBalance(participant.getBalance() - splitAmount);
         }
     
