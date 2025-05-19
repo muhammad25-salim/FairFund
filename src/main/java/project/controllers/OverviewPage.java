@@ -232,3 +232,25 @@ public class OverviewPage {
                     }
                 });
             }
+        });
+
+        // Add a header styling
+        table.getColumns().addAll(nameColumn, balanceColumn);
+        table.getStyleClass().add("table-view");
+
+        // Add a title above the table
+        Label tableTitle = new Label("Group Members");
+        tableTitle.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.getPrimaryColor()) + ";");
+        tableTitle.setPadding(new Insets(20, 0, 10, 10));
+
+        // Layout with title using ColorManager
+        VBox tableContainer = new VBox(10);
+        tableContainer.getChildren().addAll(tableTitle, table);
+        tableContainer.setPadding(new Insets(10, 20, 20, 20));
+        tableContainer.setStyle("-fx-background-color: " + ColorManager.toRgbaString(ColorManager.WHITE_MEDIUM, 0.5) + ";");
+        VBox.setVgrow(table, Priority.ALWAYS);
+
+        // Populate with group data
+        Group group = fairFundManager.getGroup(groupId);
+        ObservableList<Member> Members = FXCollections.observableArrayList(group.getMembers());
+        table.setItems(Members);
