@@ -187,3 +187,32 @@ public class PaymentsPage {
                 
                 bottomRow.getChildren().add(deleteButton);
             }
+
+              // Add all components to payment item
+            paymentItem.getChildren().addAll(amountLabel, fromToLabel, dateLabel, bottomRow);
+            paymentsListContainer.getChildren().add(paymentItem);
+        }
+
+        // If no payments
+        if (payments.isEmpty()) {
+            Label noPaymentsLabel = new Label("No payments recorded yet.");
+            noPaymentsLabel.setStyle(
+                "-fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";" +
+                "-fx-font-size: 16px;" +
+                "-fx-font-style: italic;"
+            );
+            paymentsListContainer.getChildren().add(noPaymentsLabel);
+        }
+
+        // Add title and ScrollPane to the rounded panel content
+        roundedPanelContent.getChildren().addAll(title, scrollPane);
+        roundedPanel.getChildren().add(roundedPanelContent);
+
+        // Add components to the main layout
+        mainLayout.setTop(topLayout);
+        mainLayout.setCenter(roundedPanel);
+
+        // At the end of getScene method, update the Scene creation:
+        return new Scene(mainLayout, 1200, 800);
+    }
+}
