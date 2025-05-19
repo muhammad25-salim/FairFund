@@ -252,4 +252,231 @@ public class SettingsPage {
         
         return section;
     }
+
+    private static void styleButton(Button button, Color color) {
+        // Use the current color directly rather than relying on a possibly outdated reference
+        String colorHex = String.format("#%02X%02X%02X", 
+            (int)(color.getRed() * 255), 
+            (int)(color.getGreen() * 255), 
+            (int)(color.getBlue() * 255));
+            
+        // Enhanced button style
+        button.setStyle(
+            "-fx-background-color: " + colorHex + ";" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 12px 24px;" +
+            "-fx-font-size: 15px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 8px;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);"
+        );
+        
+        // Enhanced hover effect
+        button.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> 
+            button.setStyle(
+                "-fx-background-color: derive(" + colorHex + ", 20%);" +
+                "-fx-text-fill: white;" +
+                "-fx-padding: 12px 24px;" +
+                "-fx-font-size: 15px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);" +
+                "-fx-cursor: hand;"
+            )
+        );
+        
+        button.addEventHandler(MouseEvent.MOUSE_EXITED, e -> 
+            button.setStyle(
+                "-fx-background-color: " + colorHex + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-padding: 12px 24px;" +
+                "-fx-font-size: 15px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);"
+            )
+        );
+    }
+
+    private static void styleButton(ToggleButton toggleButton, Color color) {
+        String colorHex = String.format("#%02X%02X%02X", 
+            (int)(color.getRed() * 255), 
+            (int)(color.getGreen() * 255), 
+            (int)(color.getBlue() * 255));
+            
+        toggleButton.setStyle(
+            "-fx-background-color: " + colorHex + ";" +
+            "-fx-text-fill: white;" +
+            "-fx-padding: 10px 20px;" +
+            "-fx-font-size: 14px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 5px;"
+        );
+        
+        // Add hover effect
+        toggleButton.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> 
+            toggleButton.setStyle(
+                "-fx-background-color: derive(" + colorHex + ", 30%);" +
+                "-fx-text-fill: white;" +
+                "-fx-padding: 10px 20px;" +
+                "-fx-font-size: 14px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 5px;"
+            )
+        );
+        
+        toggleButton.addEventHandler(MouseEvent.MOUSE_EXITED, e -> 
+            toggleButton.setStyle(
+                "-fx-background-color: " + colorHex + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-padding: 10px 20px;" +
+                "-fx-font-size: 14px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 5px;"
+            )
+        );
+    }
+    
+    private static void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // Helper method to create members table section
+    private static Node createMembersTableSection(Group group, FairFundManager fairFundManager, String groupId) {
+        Label memberListLabel = new Label("Group Members");
+        memberListLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: " + 
+                               ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+        
+        // Create a TableView for members
+        TableView<Member> membersTable = new TableView<>();
+        membersTable.setEditable(true);
+        membersTable.setMinHeight(300);
+        membersTable.setStyle("-fx-background-color: " + ColorManager.toRgbString(ColorManager.BACKGROUND_COLOR) + 
+                             "; -fx-border-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                             "; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+        
+        TableColumn<Member, String> nameColumn = new TableColumn<>("Member Name");
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        nameColumn.setMinWidth(400);
+        nameColumn.setPrefWidth(400);
+        nameColumn.setStyle("-fx-alignment: CENTER-LEFT; -fx-font-size: 14px; -fx-text-fill: " + 
+                           ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+        
+        // Make the name column editable
+        nameColumn.setCellFactory(column -> {
+            TableCell<Member, String> cell = new TableCell<Member, String>() {
+                private TextField textField;
+                
+                @Override
+                public void startEdit() {
+                    super.startEdit();
+                    
+                    if (textField == null) {
+                        createTextField();
+                    }
+                    
+                    setText(null);
+                    setGraphic(textField);
+                    textField.selectAll();
+                    textField.requestFocus();
+                }
+                
+                @Override
+                public void cancelEdit() {
+                    super.cancelEdit();
+                    setText(getItem());
+                    setGraphic(null);
+                }
+                
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        if (isEditing()) {
+                            if (textField != null) {
+                                textField.setText(item);
+                            }
+                            setText(null);
+                            setGraphic(textField);
+                        } else {
+                            setText(item);
+                            setGraphic(null);
+                        }
+                    }
+                }
+                
+                private void createTextField() {
+                    textField = new TextField(getItem());
+                    textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+                    textField.setOnKeyPressed(event -> {
+                        if (event.getCode().getName().equals("Enter")) {
+                            commitEdit(textField.getText());
+                        } else if (event.getCode().getName().equals("Escape")) {
+                            cancelEdit();
+                        }
+                    });
+                }
+            };
+            
+            return cell;
+        });
+        
+        // Handle edits
+        nameColumn.setOnEditCommit(event -> {
+            String oldName = event.getRowValue().getName();
+            String newName = event.getNewValue().trim();
+            
+            if (newName.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Warning", "Member name cannot be empty");
+                return;
+            }
+            
+            try {
+                DatabaseHelper dbHelper = new DatabaseHelper();
+                
+                // Find the member entity
+                List<MemberEntity> memberEntities = dbHelper.getMembersByGroup(
+                    new GroupEntity(groupId, group.getGroupName(), fairFundManager.getCurrentUser().getUsername()));
+                
+                for (MemberEntity entity : memberEntities) {
+                    if (entity.getName().equals(oldName)) {
+                        // Update the name in database
+                        entity.setName(newName);
+                        dbHelper.saveMember(entity);
+                        
+                        // Update in-memory object
+                        event.getRowValue().setName(newName);
+                        
+                        // Refresh table
+                        membersTable.refresh();
+                        
+                        // Success notification
+                        showAlert(Alert.AlertType.INFORMATION, "Success", "Member name updated successfully");
+                        break;
+                    }
+                }
+                
+                dbHelper.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update member name: " + ex.getMessage());
+            }
+        });
+        
+        membersTable.getColumns().add(nameColumn);
+        
+        // Populate the table with current members
+        ObservableList<Member> memberData = FXCollections.observableArrayList(group.getMembers());
+        membersTable.setItems(memberData);
+        
+        return new VBox(15, memberListLabel, membersTable);
+    }
 }
