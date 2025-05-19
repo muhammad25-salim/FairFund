@@ -252,7 +252,7 @@ public class SettingsPage {
         
         return section;
     }
-
+    
     private static void styleButton(Button button, Color color) {
         // Use the current color directly rather than relying on a possibly outdated reference
         String colorHex = String.format("#%02X%02X%02X", 
@@ -479,9 +479,8 @@ public class SettingsPage {
         
         return new VBox(15, memberListLabel, membersTable);
     }
-}
 
-  // Helper method to create add member section
+    // Helper method to create add member section
     private static Node createAddMemberSection(Group group, FairFundManager fairFundManager, String groupId) {
         Label addMemberLabel = new Label("Add New Member");
         addMemberLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: " + 
@@ -583,3 +582,100 @@ public class SettingsPage {
                                    "; -fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + 
                                    "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";");
         currentPasswordField.setMaxWidth(400);
+        
+        // New password field
+        PasswordField newPasswordField = new PasswordField();
+        newPasswordField.setPromptText("New Password");
+        newPasswordField.setStyle("-fx-padding: 10px; -fx-font-size: 16px; -fx-background-radius: 5px; " + 
+                               "-fx-border-radius: 5px; -fx-border-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                               "; -fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + 
+                               "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";");
+        newPasswordField.setMaxWidth(400);
+        
+        // Confirm new password field
+        PasswordField confirmPasswordField = new PasswordField();
+        confirmPasswordField.setPromptText("Confirm New Password");
+        confirmPasswordField.setStyle("-fx-padding: 10px; -fx-font-size: 16px; -fx-background-radius: 5px; " + 
+                                  "-fx-border-radius: 5px; -fx-border-color: " + ColorManager.toRgbString(ColorManager.LIGHT_BORDER) + 
+                                  "; -fx-prompt-text-fill: " + ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + 
+                                  "; -fx-text-fill: " + ColorManager.toRgbString(ColorManager.TEXT_COLOR2) + ";");
+        confirmPasswordField.setMaxWidth(400);
+        
+        // Save password button
+        Button changePasswordBtn = new Button("Update Password");
+        styleButton(changePasswordBtn, ColorManager.getPrimaryColor());
+        
+        changePasswordBtn.setOnAction(e -> {
+            String currentPassword = currentPasswordField.getText();
+            String newPassword = newPasswordField.getText();
+            String confirmPassword = confirmPasswordField.getText();
+            
+            // Basic validation
+            if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Warning", "All password fields are required");
+                return;
+            }
+            
+            if (!newPassword.equals(confirmPassword)) {
+                showAlert(Alert.AlertType.WARNING, "Warning", "New passwords don't match");
+                return;
+            }
+            
+            if (newPassword.length() < 6) {
+                showAlert(Alert.AlertType.WARNING, "Warning", "New password must be at least 6 characters");
+                return;
+            }
+            
+            try {
+                DatabaseHelper dbHelper = new DatabaseHelper();
+                
+                // Get the current user
+                UserEntity currentUser = fairFundManager.getCurrentUser();
+                
+                // Verify current password
+                if (!currentUser.getPassword().equals(currentPassword)) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Current password is incorrect");
+                    return;
+                }
+                
+                // Update password
+                UserEntity userToUpdate = dbHelper.getUserByUsername(currentUser.getUsername());
+                if (userToUpdate != null) {
+                    // Update the password
+                    userToUpdate.setPassword(newPassword);
+                    
+                    // Update the user in the database
+                    dbHelper.getUserDao().update(userToUpdate);
+                    
+                    // Update the current user in memory as well
+                    currentUser.setPassword(newPassword);
+                    
+                    // Reset fields
+                    currentPasswordField.clear();
+                    newPasswordField.clear();
+                    confirmPasswordField.clear();
+                    
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "Password updated successfully");
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error", "User not found in database");
+                }
+                
+                dbHelper.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to update password: " + ex.getMessage());
+            }
+        });
+        
+        return new VBox(15, passwordLabel, currentPasswordField, newPasswordField, confirmPasswordField, changePasswordBtn);
+    }
+
+    // Helper method to create theme selection section
+    private static Node createThemeSelectionSection() {
+        Label themeLabel = new Label("Select Theme Color");
+        themeLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: " + 
+                          ColorManager.toRgbString(ColorManager.DARK_GRAY) + ";");
+        
+        // Create 5 color options - current blue, plus 4 additional colors
+        ToggleGroup themeToggleGroup = new ToggleGroup();
+        
