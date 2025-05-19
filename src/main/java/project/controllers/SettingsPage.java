@@ -679,3 +679,111 @@ public class SettingsPage {
         // Create 5 color options - current blue, plus 4 additional colors
         ToggleGroup themeToggleGroup = new ToggleGroup();
         
+
+          // Create the color options
+        HBox colorOptions = new HBox(20);
+        colorOptions.setAlignment(Pos.CENTER_LEFT);
+        colorOptions.setPadding(new Insets(10, 0, 15, 0));
+        
+        // Blue (Default) - #238BFA
+        ToggleButton blueTheme = createColorButton("#238BFA", themeToggleGroup);
+        
+        // Green - #2ecc71
+        ToggleButton greenTheme = createColorButton("#2ecc71", themeToggleGroup);
+        
+        // Purple - #9b59b6
+        ToggleButton purpleTheme = createColorButton("#9b59b6", themeToggleGroup);
+        
+        // Orange - #e67e22
+        ToggleButton orangeTheme = createColorButton("#e67e22", themeToggleGroup);
+        
+        // Red - #e74c3c
+        ToggleButton redTheme = createColorButton("#e74c3c", themeToggleGroup);
+        
+        colorOptions.getChildren().addAll(blueTheme, greenTheme, purpleTheme, orangeTheme, redTheme);
+        
+        // Set the currently active theme - use getPrimaryColor() for most up-to-date value
+        Color currentPrimary = ColorManager.getPrimaryColor();
+        String currentHex = String.format("#%02X%02X%02X", 
+            (int)(currentPrimary.getRed() * 255), 
+            (int)(currentPrimary.getGreen() * 255), 
+            (int)(currentPrimary.getBlue() * 255)).toUpperCase();
+        
+        // Select the current color
+        for (Node node : colorOptions.getChildren()) {
+            if (node instanceof ToggleButton) {
+                ToggleButton btn = (ToggleButton) node;
+                if (btn.getUserData() != null && btn.getUserData().toString().equalsIgnoreCase(currentHex)) {
+                    btn.setSelected(true);
+                    break;
+                }
+            }
+        }
+        
+        // If none match, default to blue
+        if (themeToggleGroup.getSelectedToggle() == null) {
+            blueTheme.setSelected(true);
+        }
+        
+        // Create live preview label
+        Label previewLabel = new Label("Preview");
+        previewLabel.setStyle("-fx-font-size: 14px; -fx-font-style: italic; -fx-text-fill: " + 
+                            ColorManager.toRgbString(ColorManager.MEDIUM_GRAY) + ";");
+        
+        // Create a small preview section that shows immediately how the new color looks
+        Button previewButton = new Button("Preview Button");
+        Rectangle previewAccent = new Rectangle(60, 4);
+        previewAccent.setArcWidth(4);
+        previewAccent.setArcHeight(4);
+        previewAccent.setFill(ColorManager.getPrimaryColor());
+        
+        // Style the preview button with the current primary color
+        styleButton(previewButton, ColorManager.getPrimaryColor());
+        
+        VBox previewBox = new VBox(10, previewLabel, previewButton, previewAccent);
+        previewBox.setPadding(new Insets(10, 0, 10, 0));
+        
+        // Add live preview when selecting colors
+        themeToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle != null) {
+                String selectedColorHex = newToggle.getUserData().toString();
+                Color selectedColor = Color.web(selectedColorHex);
+                
+                // Update preview elements
+                previewAccent.setFill(selectedColor);
+                styleButton(previewButton, selectedColor);
+            }
+        });
+        
+        // Apply button for the theme
+        Button applyThemeBtn = new Button("Apply Theme");
+        styleButton(applyThemeBtn, ColorManager.getPrimaryColor());
+        
+        applyThemeBtn.setOnAction(e -> {
+            ToggleButton selectedBtn = (ToggleButton) themeToggleGroup.getSelectedToggle();
+            if (selectedBtn != null && selectedBtn.getUserData() != null) {
+                String colorHex = selectedBtn.getUserData().toString();
+                Color newColor = Color.web(colorHex);
+                
+                try {
+                    // Get reference to the current scene
+                    Scene currentScene = applyThemeBtn.getScene();
+                    
+                    // Apply changes to the current scene
+                    applyThemeChangesImmediately(currentScene, newColor);
+                    
+                    // Show success message
+                    showAlert(Alert.AlertType.INFORMATION, "Success", 
+                              "Theme updated successfully! The new theme will be applied to all pages.");
+                    
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to update theme: " + ex.getMessage());
+                }
+            }
+        });
+        
+        return new VBox(15, themeLabel, colorOptions, previewBox, applyThemeBtn);
+    }
+
+    
