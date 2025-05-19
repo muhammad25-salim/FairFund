@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FairFundManager {
-    
+
     private DatabaseHelper databaseHelper;
     private Map<String, Group> groups;
     private UserEntity currentUser;
@@ -98,8 +98,9 @@ public class FairFundManager {
         } else {
             System.out.println("Group not found!");
         }
-    }
-
+    }          
+    
+    
     public void removeExpenseFromGroup(String groupId, Expense expense) {
         Group group = groups.get(groupId);
         if (group != null) {
@@ -128,8 +129,9 @@ public class FairFundManager {
         } else {
             System.out.println("Group not found!");
         }
-    }
-
+    }    
+    
+    
     public void updateExpenseInGroup(String groupId, Expense oldExpense, Expense newExpense) {
         Group group = groups.get(groupId);
         if (group != null) {
@@ -183,8 +185,9 @@ public class FairFundManager {
         } else {
             System.out.println("Group not found!");
         }
-    } 
-
+    }    
+    
+    
     public boolean loadGroup(String groupId) {
         try {
             GroupEntity groupEntity = databaseHelper.getGroupDao().queryForId(groupId);
@@ -236,6 +239,8 @@ public class FairFundManager {
             return false;
         }
     }
+       
+    
 
     public Group getGroup(String groupId) {
         return groups.get(groupId);
@@ -330,5 +335,3 @@ public class FairFundManager {
         return null;
     }
 }
-
-

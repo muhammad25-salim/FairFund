@@ -9,16 +9,20 @@ public class GroupEntity {
     @DatabaseField(id = true)
     private String id;
 
-    @DatabaseField
+    @DatabaseField(canBeNull = false)
     private String name;
 
-    public GroupEntity() {
-        // ORMLite requires a no-arg constructor
-    }
+    @DatabaseField(canBeNull = false)
+    private String creator;  // New field to store the creator's username
 
-    public GroupEntity(String id, String name) {
+    // Default constructor for ORMLite
+    public GroupEntity() {}
+
+    // Constructor for creating a new group
+    public GroupEntity(String id, String name, String creator) {
         this.id = id;
         this.name = name;
+        this.creator = creator;
     }
 
     // Getters and setters
@@ -36,5 +40,13 @@ public class GroupEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }
