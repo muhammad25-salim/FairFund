@@ -17,10 +17,6 @@ import java.util.Map;
 
 
 public class FairFundManager {
-<<<<<<< HEAD
-=======
-
->>>>>>> muhammadSalim
     private DatabaseHelper databaseHelper;
     private Map<String, Group> groups;
     private UserEntity currentUser;
@@ -251,6 +247,10 @@ public class FairFundManager {
         return groups;
     }
 
+    public void close() {
+        databaseHelper.close();
+    }
+
     public Map<String, String> getGroupsCreatedByCurrentUser() {
         Map<String, String> groupsMap = new HashMap<>();
         try {
@@ -330,10 +330,6 @@ public class FairFundManager {
             }
         }
         return null;
-    }
-
-    public void close() {
-        databaseHelper.close();
     }
 }
 

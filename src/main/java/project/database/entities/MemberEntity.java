@@ -4,8 +4,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 
-@DatabaseTable(tableName = "users")
-public class UserEntity {
+@DatabaseTable(tableName = "Members")
+public class MemberEntity {
 
     @DatabaseField(generatedId = true) // Auto-generate unique ID
     private int id;
@@ -16,11 +16,11 @@ public class UserEntity {
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "group_id")
     private GroupEntity group;
 
-    public UserEntity() {
+    public MemberEntity() {
         // ORMLite requires a no-arg constructor
     }
 
-    public UserEntity(String name, GroupEntity group) {
+    public MemberEntity(String name, GroupEntity group) {
         this.name = name;
         this.group = group;
     }

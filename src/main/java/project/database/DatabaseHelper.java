@@ -27,7 +27,7 @@ public class DatabaseHelper {
     private Dao<ExpenseEntity, Integer> expenseDao;
     private Dao<ExpenseParticipantEntity, Integer> expenseParticipantDao;
     private Dao<UserEntity, Integer> userDao;
-    private Dao<PaymentEntity, Integer> paymentDao
+    private Dao<PaymentEntity, Integer> paymentDao;
 
     public DatabaseHelper() throws SQLException {
         connectionSource = new JdbcConnectionSource(DATABASE_URL);
